@@ -7,7 +7,7 @@ import uuid
 from fastapi import APIRouter, File, Form, Request, UploadFile
 
 from api.app.config import get_settings
-from api.app.metrics import CONFIDENCE_SUMMARY, MODEL_READY, PREDICTION_COUNT, ACTIVE_MODEL_VERSION
+from api.app.metrics import ACTIVE_MODEL_VERSION, CONFIDENCE_SUMMARY, MODEL_READY, PREDICTION_COUNT
 from api.app.schemas import PredictResponse
 from api.app.services.health import get_storage
 from api.app.services.inference import run_prediction

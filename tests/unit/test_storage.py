@@ -62,40 +62,40 @@ class TestFilesystemStorage:
 
 
 class TestS3Storage:
-  @pytest.fixture
-  def storage(self) -> S3Storage | None:
-    endpoint = "http://localhost:4566"
-    client = S3Storage(
-      endpoint_url=endpoint,
-      region="us-west-2",
-      access_key_id="test",
-      secret_access_key="test",
-    )
-    try:
-      if not client.bucket_exists("fluentedge-uploads"):
-        import boto3
-
-        boto3.client(
-          "s3",
-          endpoint_url=endpoint,
-          region_name="us-west-2",
-          aws_access_key_id="test",
-          aws_secret_access_key="test",
-        ).create_bucket(
-          Bucket="fluentedge-uploads",
-          CreateBucketConfiguration={"LocationConstraint": "us-west-2"},
+    @pytest.fixture
+    def storage(self) -> S3Storage | None:
+        endpoint = "http://localhost:4566"
+        client = S3Storage(
+            endpoint_url=endpoint,
+            region="us-west-2",
+            access_key_id="test",
+            secret_access_key="test",
         )
-    except Exception:
-      pytest.skip("LocalStack not available")
-    return client
+        try:
+            if not client.bucket_exists("fluentedge-uploads"):
+                import boto3
 
-  def test_put_get_delete(self, storage: S3Storage):
-    key = storage.put_object("fluentedge-uploads", b"audio-bytes", prefix="uploads")
-    assert storage.get_object("fluentedge-uploads", key) == b"audio-bytes"
-    storage.delete_object("fluentedge-uploads", key)
-    with pytest.raises(ClientError):
-      storage.get_object("fluentedge-uploads", key)
+                boto3.client(
+                    "s3",
+                    endpoint_url=endpoint,
+                    region_name="us-west-2",
+                    aws_access_key_id="test",
+                    aws_secret_access_key="test",
+                ).create_bucket(
+                    Bucket="fluentedge-uploads",
+                    CreateBucketConfiguration={"LocationConstraint": "us-west-2"},
+                )
+        except Exception:
+            pytest.skip("LocalStack not available")
+        return client
 
-  def test_bucket_exists(self, storage: S3Storage):
-    assert storage.bucket_exists("fluentedge-uploads") is True
-    assert storage.bucket_exists("nonexistent-bucket-xyz") is False
+    def test_put_get_delete(self, storage: S3Storage):
+        key = storage.put_object("fluentedge-uploads", b"audio-bytes", prefix="uploads")
+        assert storage.get_object("fluentedge-uploads", key) == b"audio-bytes"
+        storage.delete_object("fluentedge-uploads", key)
+        with pytest.raises(ClientError):
+            storage.get_object("fluentedge-uploads", key)
+
+    def test_bucket_exists(self, storage: S3Storage):
+        assert storage.bucket_exists("fluentedge-uploads") is True
+        assert storage.bucket_exists("nonexistent-bucket-xyz") is False

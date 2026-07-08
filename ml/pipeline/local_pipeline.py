@@ -5,13 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 import mlflow
-import pandas as pd
 
 from ml.data.preprocess import preprocess_clip, write_normalized_audio
 from ml.data.schema import FEATURE_SCHEMA_VERSION, Manifest
@@ -73,9 +71,9 @@ def run_pipeline(
     processed = assign_splits(processed, seed=seed)
     m_hash = manifest_hash(processed)
     (output_dir / "clean_manifest.json").write_text(
-        Manifest(manifest_version=manifest.manifest_version, seed=seed, clips=processed).model_dump_json(
-            indent=2
-        ),
+        Manifest(
+            manifest_version=manifest.manifest_version, seed=seed, clips=processed
+        ).model_dump_json(indent=2),
         encoding="utf-8",
     )
 
@@ -92,7 +90,7 @@ def run_pipeline(
     x_test, y_test = feature_matrix(test_df)
 
     configure_mlflow(tracking_uri)
-    run_name = f"fluentedge-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}"
+    run_name = f"fluentedge-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}"
     mlflow.set_experiment("fluentedge-training")
     with mlflow.start_run(run_name=run_name) as run:
         run_id = run.info.run_id
@@ -102,7 +100,11 @@ def run_pipeline(
         ]
         comparison = compare_candidates(evaluations)
         (output_dir / "evaluation_report.json").write_text(
-            json.dumps({"comparison": comparison, "details": [e.__dict__ for e in evaluations]}, indent=2, default=str),
+            json.dumps(
+                {"comparison": comparison, "details": [e.__dict__ for e in evaluations]},
+                indent=2,
+                default=str,
+            ),
             encoding="utf-8",
         )
 

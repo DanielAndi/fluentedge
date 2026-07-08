@@ -10,9 +10,8 @@ import joblib
 import numpy as np
 from sklearn.pipeline import Pipeline
 
-from ml.data.schema import LabelName
+from ml.data.schema import ClipRecord, LabelName
 from ml.features.build import FEATURE_COLUMNS, extract_clip_features
-from ml.data.schema import ClipRecord
 
 
 def artifact_checksum(path: str | Path) -> str:

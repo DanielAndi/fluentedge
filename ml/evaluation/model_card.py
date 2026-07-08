@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from ml.evaluation.evaluate import CandidateEvaluation
 
@@ -17,7 +17,7 @@ def render_model_card(
     artifact_checksum: str,
     dataset_note: str,
 ) -> str:
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(UTC).isoformat()
     metrics = candidate.metrics
     confusion = candidate.confusion
     return f"""# FluentEdge Model Card
@@ -42,22 +42,22 @@ Prototype phrase-similarity feedback for controlled English prompts. This is **n
 
 | Metric | Value |
 |--------|-------|
-| Macro F1 | {metrics['macro_f1']:.4f} |
-| Precision (pass) | {metrics['precision_pass']:.4f} |
-| Recall (pass) | {metrics['recall_pass']:.4f} |
-| Precision (needs_review) | {metrics['precision_needs_review']:.4f} |
-| Recall (needs_review) | {metrics['recall_needs_review']:.4f} |
-| WER mean | {metrics['wer_mean']:.4f} |
-| CER mean | {metrics['cer_mean']:.4f} |
-| Latency p95 (ms) | {metrics['latency_p95_ms']:.2f} |
-| Quality gate | {'pass' if candidate.gate_passed else 'fail'} |
+| Macro F1 | {metrics["macro_f1"]:.4f} |
+| Precision (pass) | {metrics["precision_pass"]:.4f} |
+| Recall (pass) | {metrics["recall_pass"]:.4f} |
+| Precision (needs_review) | {metrics["precision_needs_review"]:.4f} |
+| Recall (needs_review) | {metrics["recall_needs_review"]:.4f} |
+| WER mean | {metrics["wer_mean"]:.4f} |
+| CER mean | {metrics["cer_mean"]:.4f} |
+| Latency p95 (ms) | {metrics["latency_p95_ms"]:.2f} |
+| Quality gate | {"pass" if candidate.gate_passed else "fail"} |
 
 ## Confusion matrix
 
 | | Pred 0 | Pred 1 |
 |--|--------|--------|
-| True 0 | {confusion['tn']} | {confusion['fp']} |
-| True 1 | {confusion['fn']} | {confusion['tp']} |
+| True 0 | {confusion["tn"]} | {confusion["fp"]} |
+| True 1 | {confusion["fn"]} | {confusion["tp"]} |
 
 ## Confidence limitations
 

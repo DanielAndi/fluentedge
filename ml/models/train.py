@@ -26,7 +26,9 @@ def build_candidates(random_seed: int = 42) -> dict[str, Pipeline]:
                 ("scaler", StandardScaler()),
                 (
                     "model",
-                    LogisticRegression(max_iter=1000, random_state=random_seed, class_weight="balanced"),
+                    LogisticRegression(
+                        max_iter=1000, random_state=random_seed, class_weight="balanced"
+                    ),
                 ),
             ]
         ),

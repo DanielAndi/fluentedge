@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -61,7 +60,7 @@ def test_model_card_and_checksum_roundtrip(fixture_dir: Path, tmp_path: Path):
     candidate = train_candidates(x_train, y_train)[0]
     model_path = tmp_path / "model.joblib"
     save_model(candidate.pipeline, model_path)
-    checksum = artifact_checksum(model_path)
+    assert artifact_checksum(model_path)
     loaded = load_pipeline(model_path)
     assert loaded.predict(x_train[:1]).shape == (1,)
 

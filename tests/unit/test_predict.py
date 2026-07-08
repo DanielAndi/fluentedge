@@ -9,8 +9,6 @@ from fastapi.testclient import TestClient
 
 from api.app.main import app
 from api.app.services.model_loader import ModelLoader
-from ml.features.audio import encode_wav_bytes
-import numpy as np
 
 FIXTURE_WAV = Path(__file__).resolve().parents[1] / "fixtures" / "synthetic" / "clip_000.wav"
 

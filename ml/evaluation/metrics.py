@@ -21,7 +21,9 @@ def classification_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> dict[str, 
         "macro_f1": float(f1_score(y_true, y_pred, average="macro", zero_division=0)),
         "precision_pass": float(precision_score(y_true, y_pred, pos_label=1, zero_division=0)),
         "recall_pass": float(recall_score(y_true, y_pred, pos_label=1, zero_division=0)),
-        "precision_needs_review": float(precision_score(y_true, y_pred, pos_label=0, zero_division=0)),
+        "precision_needs_review": float(
+            precision_score(y_true, y_pred, pos_label=0, zero_division=0)
+        ),
         "recall_needs_review": float(recall_score(y_true, y_pred, pos_label=0, zero_division=0)),
     }
 
@@ -47,7 +49,9 @@ def speech_error_summaries(frame: pd.DataFrame) -> dict[str, float]:
     }
 
 
-def measure_inference_latency(predict_fn, samples: np.ndarray, *, warmup: int = 3) -> dict[str, float]:
+def measure_inference_latency(
+    predict_fn, samples: np.ndarray, *, warmup: int = 3
+) -> dict[str, float]:
     for idx in range(min(warmup, len(samples))):
         predict_fn(samples[idx : idx + 1])
     latencies: list[float] = []

@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from ml.data.schema import ClipRecord, Manifest
 from ml.data.validate import validate_manifest
 from ml.features.audio import encode_wav_bytes
-import numpy as np
 
 
 @pytest.fixture

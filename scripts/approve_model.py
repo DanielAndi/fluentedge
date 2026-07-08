@@ -10,7 +10,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from ml.models.registry import approve_model, configure_mlflow, get_production_model_uri  # noqa: E402
+from ml.models.registry import (  # noqa: E402
+    approve_model,
+    configure_mlflow,
+    get_production_model_uri,
+)
 
 
 def main() -> int:

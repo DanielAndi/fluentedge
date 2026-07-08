@@ -11,7 +11,12 @@ from api.app.exceptions import APIError
 from api.app.services.model_loader import LoadedModel, ModelLoader
 from api.app.services.storage import StorageAdapter
 from ml.data.schema import ClipRecord
-from ml.features.audio import AudioValidationError, load_audio_bytes, normalize_audio, encode_wav_bytes
+from ml.features.audio import (
+    AudioValidationError,
+    encode_wav_bytes,
+    load_audio_bytes,
+    normalize_audio,
+)
 from ml.features.text import normalize_text
 from ml.models.predict import predict_clip
 
@@ -33,13 +38,19 @@ def validate_upload(filename: str, data: bytes) -> None:
     except AudioValidationError as exc:
         message = str(exc)
         if "10 MB" in message:
-            raise APIError("FILE_TOO_LARGE", "Upload a file smaller than 10 MB.", status_code=413) from exc
+            raise APIError(
+                "FILE_TOO_LARGE", "Upload a file smaller than 10 MB.", status_code=413
+            ) from exc
         if "30 second" in message:
-            raise APIError("AUDIO_TOO_LONG", "Upload audio shorter than 30 seconds.", status_code=413) from exc
+            raise APIError(
+                "AUDIO_TOO_LONG", "Upload audio shorter than 30 seconds.", status_code=413
+            ) from exc
         if "decode" in message.lower() or "Unsupported" in message:
             code = "UNSUPPORTED_AUDIO_TYPE" if "Unsupported" in message else "DECODE_FAILURE"
             raise APIError(code, message, status_code=400) from exc
-        raise APIError("DECODE_FAILURE", "Unable to decode the uploaded audio.", status_code=400) from exc
+        raise APIError(
+            "DECODE_FAILURE", "Unable to decode the uploaded audio.", status_code=400
+        ) from exc
 
 
 def run_prediction(
@@ -75,7 +86,9 @@ def run_prediction(
             metadata={"request_id": request_id},
         )
     except Exception as exc:  # noqa: BLE001
-        logger.warning("storage_upload_failed request_id=%s error=%s", request_id, type(exc).__name__)
+        logger.warning(
+            "storage_upload_failed request_id=%s error=%s", request_id, type(exc).__name__
+        )
         raise APIError(
             "DEPENDENCY_UNAVAILABLE",
             "Temporary storage is unavailable. Try again shortly.",

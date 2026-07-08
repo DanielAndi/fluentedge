@@ -16,7 +16,9 @@ SAMPLE_RATE = 16000
 def write_tone_wav(path: Path, duration: float, frequency: float = 440.0) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     samples = int(duration * SAMPLE_RATE)
-    audio = [int(16000 * math.sin(2 * math.pi * frequency * i / SAMPLE_RATE)) for i in range(samples)]
+    audio = [
+        int(16000 * math.sin(2 * math.pi * frequency * i / SAMPLE_RATE)) for i in range(samples)
+    ]
     with wave.open(str(path), "w") as handle:
         handle.setnchannels(1)
         handle.setsampwidth(2)
@@ -49,7 +51,9 @@ def build_manifest() -> dict:
         for phrase_idx, (transcript, expected, label) in enumerate(phrases):
             clip_id = f"clip_{clip_idx:03d}"
             filename = f"{clip_id}.wav"
-            write_tone_wav(OUT_DIR / filename, duration=1.5 + (phrase_idx * 0.1), frequency=220 + speaker * 20)
+            write_tone_wav(
+                OUT_DIR / filename, duration=1.5 + (phrase_idx * 0.1), frequency=220 + speaker * 20
+            )
             clips.append(
                 {
                     "clip_id": clip_id,

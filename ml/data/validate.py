@@ -76,9 +76,7 @@ def validate_manifest(manifest: Manifest, base_dir: Path | None = None) -> Valid
         try:
             load_audio_file(audio_path)
         except (AudioValidationError, OSError) as exc:
-            report.issues.append(
-                ValidationIssue(clip.clip_id, "unreadable_audio", str(exc))
-            )
+            report.issues.append(ValidationIssue(clip.clip_id, "unreadable_audio", str(exc)))
             continue
 
         valid.append(clip)

@@ -5,7 +5,7 @@ import uuid
 from fastapi import APIRouter, Request, Response
 
 from api.app.config import get_settings
-from api.app.metrics import MODEL_READY, ACTIVE_MODEL_VERSION
+from api.app.metrics import ACTIVE_MODEL_VERSION, MODEL_READY
 from api.app.schemas import ReadyResponse
 from api.app.services.health import check_storage, get_storage
 from api.app.services.model_loader import get_model_loader

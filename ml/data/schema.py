@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, Field
 
 
-class SplitName(str, Enum):
+class SplitName(StrEnum):
     TRAIN = "train"
     VALIDATION = "validation"
     TEST = "test"
 
 
-class LabelName(str, Enum):
+class LabelName(StrEnum):
     PASS = "pass"
     NEEDS_REVIEW = "needs_review"
 

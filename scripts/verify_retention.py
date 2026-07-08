@@ -7,7 +7,7 @@ import argparse
 import os
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,7 +31,9 @@ def build_storage():
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify upload retention cleanup")
     parser.add_argument("--cleanup", action="store_true", help="Delete expired uploads")
-    parser.add_argument("--self-test", action="store_true", help="Seed an expired object before cleanup")
+    parser.add_argument(
+        "--self-test", action="store_true", help="Seed an expired object before cleanup"
+    )
     parser.add_argument("--max-age-seconds", type=int, default=None)
     args = parser.parse_args()
 
@@ -54,7 +56,7 @@ def main() -> int:
     print(f"objects_before={len(before)}")
     print(f"deleted={deleted}")
     print(f"objects_after={len(after)}")
-    print(f"checked_at={datetime.now(timezone.utc).isoformat()}")
+    print(f"checked_at={datetime.now(UTC).isoformat()}")
 
     if args.cleanup or deleted > 0:
         if deleted == 0 and len(before) > 0:

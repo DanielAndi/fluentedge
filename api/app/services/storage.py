@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-import os
 import time
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import BinaryIO
 
@@ -181,7 +180,7 @@ class FilesystemStorage(StorageAdapter):
         if metadata:
             for k, v in metadata.items():
                 meta_lines.append(f"{k}={v}")
-        meta_lines.append(f"last_modified={datetime.now(timezone.utc).isoformat()}")
+        meta_lines.append(f"last_modified={datetime.now(UTC).isoformat()}")
         meta_path.write_text("\n".join(meta_lines), encoding="utf-8")
         return key
 
@@ -209,7 +208,7 @@ class FilesystemStorage(StorageAdapter):
                 objects.append(
                     {
                         "key": rel,
-                        "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+                        "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=UTC),
                         "size": stat.st_size,
                     }
                 )
