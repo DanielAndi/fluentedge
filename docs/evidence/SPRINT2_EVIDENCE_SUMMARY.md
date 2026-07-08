@@ -55,17 +55,23 @@
 
 ## Missing Evidence
 
-- [ ] Architecture diagram PNG export (`docs/evidence/E-01-architecture/`)
-- [ ] GitHub Project board and saved-view screenshots
-- [ ] MLflow registered-model screenshot
-- [ ] Grafana operations dashboard screenshot
-- [ ] Learner UI screenshot (`docs/evidence/E-08-ui-api/ui-screenshot.png`)
-- [ ] Performance/latency screenshot or report
-- [ ] EDA or data-exploration screenshot
-- [ ] Rollback test output capture
-- [ ] Branch protection settings screenshot (if enabled)
-- [ ] Manual Local Evidence workflow run + artifact download
-- [ ] Confluence page or instructor waiver note
+- [ ] Branch protection settings screenshot (optional if rules not enabled on account plan)
+- [ ] GitHub Project saved views: Roadmap, Evidence Review (confirm in web UI)
+- [ ] Manual Local Evidence workflow run + artifact download (optional)
+- [ ] Written Confluence waiver if syllabus requires Confluence page
+
+## Captured 2026-07-08
+
+- [x] Architecture diagrams (`docs/evidence/E-01-architecture/`)
+- [x] Requirements review screenshot
+- [x] Performance latency report + screenshot
+- [x] EDA / evaluation screenshot
+- [x] Health-check output (text + screenshot)
+- [x] MLflow, Grafana, Prometheus, learner UI screenshots
+- [x] GitHub Actions CI screenshot
+- [x] Project fields export + board capture
+- [x] Traceability / issues screenshot
+- [x] Final submission document (`docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md`)
 
 ## Known Limitations
 

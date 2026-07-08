@@ -1,0 +1,71 @@
+{
+  "comparison": {
+    "winner": "logistic_regression",
+    "comparison": [
+      {
+        "name": "logistic_regression",
+        "macro_f1": 1.0,
+        "gate_passed": true,
+        "latency_p95_ms": 0.22010125030647032
+      },
+      {
+        "name": "random_forest",
+        "macro_f1": 1.0,
+        "gate_passed": true,
+        "latency_p95_ms": 4.835544749766996
+      }
+    ]
+  },
+  "details": [
+    {
+      "name": "logistic_regression",
+      "metrics": {
+        "macro_f1": 1.0,
+        "precision_pass": 1.0,
+        "recall_pass": 1.0,
+        "precision_needs_review": 1.0,
+        "recall_needs_review": 1.0,
+        "wer_mean": 0.19791666666666666,
+        "wer_median": 0.125,
+        "wer_p95": 0.6666666666666666,
+        "cer_mean": 0.17879026610644258,
+        "cer_median": 0.14285714285714285,
+        "cer_p95": 0.4166666666666667,
+        "latency_p50_ms": 0.19855899972753832,
+        "latency_p95_ms": 0.22010125030647032
+      },
+      "confusion": {
+        "tn": 8,
+        "fp": 0,
+        "fn": 0,
+        "tp": 8
+      },
+      "gate_passed": true
+    },
+    {
+      "name": "random_forest",
+      "metrics": {
+        "macro_f1": 1.0,
+        "precision_pass": 1.0,
+        "recall_pass": 1.0,
+        "precision_needs_review": 1.0,
+        "recall_needs_review": 1.0,
+        "wer_mean": 0.19791666666666666,
+        "wer_median": 0.125,
+        "wer_p95": 0.6666666666666666,
+        "cer_mean": 0.17879026610644258,
+        "cer_median": 0.14285714285714285,
+        "cer_p95": 0.4166666666666667,
+        "latency_p50_ms": 4.61602799987304,
+        "latency_p95_ms": 4.835544749766996
+      },
+      "confusion": {
+        "tn": 8,
+        "fp": 0,
+        "fn": 0,
+        "tp": 8
+      },
+      "gate_passed": true
+    }
+  ]
+}
