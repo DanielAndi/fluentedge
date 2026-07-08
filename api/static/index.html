@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FluentEdge Speaking Feedback</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #111; background: #f7f7fb; }
+    body { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.6rem; }
+    label { display: block; font-weight: 600; margin-top: 1rem; }
+    input[type="text"], input[type="file"] { width: 100%; margin-top: 0.35rem; }
+    button { margin-top: 1rem; padding: 0.6rem 1rem; font-size: 1rem; cursor: pointer; }
+    #status { margin-top: 1rem; min-height: 1.2rem; }
+    #results { margin-top: 1rem; padding: 1rem; background: #fff; border-radius: 8px; border: 1px solid #ddd; }
+    .disclaimer { margin-top: 1.5rem; font-size: 0.9rem; color: #444; }
+    .hidden { display: none; }
+    .error { color: #a40000; }
+    .pass { color: #0a6b0a; font-weight: 700; }
+    .review { color: #8a5a00; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>FluentEdge Speaking Feedback</h1>
+    <p>Practice a controlled English phrase and receive prototype feedback.</p>
+  </header>
+
+  <main>
+    <form id="analyze-form" aria-labelledby="form-title">
+      <h2 id="form-title" class="hidden">Analyze phrase</h2>
+      <label for="expected_phrase">Expected phrase</label>
+      <input id="expected_phrase" name="expected_phrase" type="text" required
+             placeholder="The quick brown fox" autocomplete="off" />
+
+      <label for="audio_file">Audio file (WAV, FLAC, MP3, M4A)</label>
+      <input id="audio_file" name="file" type="file" accept=".wav,.flac,.mp3,.m4a,audio/*" required />
+
+      <label for="record_toggle">
+        <input id="record_toggle" type="checkbox" /> Record with microphone
+      </label>
+      <div id="record_controls" class="hidden">
+        <button type="button" id="start_record">Start recording</button>
+        <button type="button" id="stop_record" disabled>Stop recording</button>
+      </div>
+
+      <button type="submit" id="analyze_btn">Analyze</button>
+    </form>
+
+    <div id="status" role="status" aria-live="polite"></div>
+    <section id="results" class="hidden" aria-live="polite">
+      <p><strong>Score:</strong> <span id="score"></span></p>
+      <p><strong>Result:</strong> <span id="label"></span></p>
+      <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+      <p><strong>Feedback:</strong> <span id="feedback"></span></p>
+      <p><strong>Request ID:</strong> <code id="request_id"></code></p>
+      <button type="button" id="retry_btn">Try again</button>
+    </section>
+  </main>
+
+  <p class="disclaimer">
+    Prototype estimate only. This tool compares phrase similarity and acoustic cues;
+    it does not provide clinical pronunciation assessment.
+  </p>
+
+  <script>
+    const form = document.getElementById("analyze-form");
+    const statusEl = document.getElementById("status");
+    const resultsEl = document.getElementById("results");
+    const recordToggle = document.getElementById("record_toggle");
+    const recordControls = document.getElementById("record_controls");
+    const startRecordBtn = document.getElementById("start_record");
+    const stopRecordBtn = document.getElementById("stop_record");
+    const retryBtn = document.getElementById("retry_btn");
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordedBlob = null;
+
+    recordToggle.addEventListener("change", () => {
+      recordControls.classList.toggle("hidden", !recordToggle.checked);
+    });
+
+    startRecordBtn.addEventListener("click", async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        recordedBlob = new Blob(recordedChunks, { type: "audio/webm" });
+        statusEl.textContent = "Recording captured. Submit to analyze.";
+        stream.getTracks().forEach((t) => t.stop());
+      };
+      mediaRecorder.start();
+      startRecordBtn.disabled = true;
+      stopRecordBtn.disabled = false;
+      statusEl.textContent = "Recording...";
+    });
+
+    stopRecordBtn.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+      }
+      startRecordBtn.disabled = false;
+      stopRecordBtn.disabled = true;
+    });
+
+    retryBtn.addEventListener("click", () => {
+      resultsEl.classList.add("hidden");
+      statusEl.textContent = "";
+      form.reset();
+      recordedBlob = null;
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      resultsEl.classList.add("hidden");
+      statusEl.textContent = "Analyzing...";
+      document.getElementById("analyze_btn").disabled = true;
+
+      const formData = new FormData();
+      formData.append("expected_phrase", document.getElementById("expected_phrase").value);
+      const fileInput = document.getElementById("audio_file");
+      if (recordedBlob) {
+        formData.append("file", recordedBlob, "recording.webm");
+      } else if (fileInput.files.length) {
+        formData.append("file", fileInput.files[0]);
+      } else {
+        statusEl.innerHTML = '<span class="error">Choose or record an audio file.</span>';
+        document.getElementById("analyze_btn").disabled = false;
+        return;
+      }
+
+      try {
+        const response = await fetch("/predict", { method: "POST", body: formData });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error?.message || "Request failed");
+        }
+        document.getElementById("score").textContent = data.score;
+        const labelEl = document.getElementById("label");
+        labelEl.textContent = data.label;
+        labelEl.className = data.label === "pass" ? "pass" : "review";
+        document.getElementById("confidence").textContent =
+          `${data.confidence} (prototype estimate, not calibrated)`;
+        document.getElementById("feedback").textContent = data.feedback_categories.join(", ");
+        document.getElementById("request_id").textContent = data.request_id;
+        resultsEl.classList.remove("hidden");
+        statusEl.textContent = "Analysis complete.";
+      } catch (err) {
+        statusEl.innerHTML = `<span class="error">${err.message}</span>`;
+      } finally {
+        document.getElementById("analyze_btn").disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
