@@ -1,0 +1,1 @@
+{"request_id":"req_a9413a0a6f9c","score":96.2,"label":"pass","confidence":0.9624,"feedback_categories":["minor_word_timing_difference"],"model_version":"fluentedge-baseline-1","latency_ms":38}
