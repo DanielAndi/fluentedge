@@ -95,9 +95,9 @@ Commit verified: [`db1a67c`](https://github.com/DanielAndi/fluentedge/commit/db1
 
 See [`../MANUAL_SCREENSHOT_CHECKLIST.md`](../MANUAL_SCREENSHOT_CHECKLIST.md) for the full list. Highlights:
 
-- [ ] Grafana dashboard screenshot
-- [ ] MLflow run screenshot
-- [ ] GitHub Project board / saved-view screenshots
+- [x] Grafana dashboard screenshot
+- [x] MLflow run screenshot
+- [ ] GitHub Actions / Project board / saved-view screenshots from authenticated browser
 - [ ] Branch protection screenshot (if enabled)
 - [ ] Run **Manual Local Evidence** workflow and record artifact URL
 

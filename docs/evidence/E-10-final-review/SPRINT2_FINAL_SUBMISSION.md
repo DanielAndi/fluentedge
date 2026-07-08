@@ -5,7 +5,7 @@
 **Author:** Daniel Grijalva  
 **Submission date:** 2026-07-08  
 **Repository:** https://github.com/DanielAndi/fluentedge  
-**Evidence commit:** `c512c2c` (pre-capture); screenshots captured locally 2026-07-08 with stack running
+**Evidence commit baseline:** `a282667`; local screenshots refreshed from the running stack during evidence audit
 
 ---
 
@@ -15,16 +15,16 @@ This document consolidates Sprint 2 implementation evidence for FluentEdge: a lo
 
 | Area | Status | Primary evidence |
 |------|--------|----------------|
-| E-01 Architecture | Complete | Diagrams below |
-| E-02 Requirements | Complete | Issue #1 + Project #4 |
+| E-01 Architecture | Complete | Mermaid diagrams in design specification |
+| E-02 Requirements | Complete | Project backlog/table + board screenshots |
 | E-03 Non-functional | Complete | CI run + latency report |
 | E-04 Data | Complete | Schema, dataset card, validation |
 | E-05 Infrastructure | Complete | Compose, SAM, health checks |
 | E-06 Training | Complete | Pipeline artifacts + MLflow |
 | E-07 Deployment / monitoring | Complete | CI/CD, Grafana, Prometheus |
 | E-08 UI / API | Complete | Learner UI + OpenAPI + sample response |
-| E-09 Governance | Mostly complete | Audit report; branch protection screenshot optional |
-| E-10 Final review | Complete | This document + traceability capture |
+| E-09 Governance | Complete | Audit report, Project board, fields export, repository overview |
+| E-10 Final review | Complete | This document + traceability evidence-index screenshot |
 
 **Confluence waiver:** Sprint 2 evidence is maintained in GitHub (`docs/evidence/`) per instructor-approved Jira replacement guidance. Attach written Confluence waiver if the syllabus requires it.
 
@@ -37,7 +37,7 @@ This document consolidates Sprint 2 implementation evidence for FluentEdge: a lo
 | Repository | https://github.com/DanielAndi/fluentedge |
 | GitHub Project #4 | https://github.com/users/DanielAndi/projects/4 |
 | Sprint 2 milestone | https://github.com/DanielAndi/fluentedge/milestone/1 |
-| Design specification | [`FluentEdge_Sprint2_Design_and_Requirements_Specification.md`](../../FluentEdge_Sprint2_Design_and_Requirements_Specification.md) |
+| Design specification | [`FluentEdge_Sprint2_Design_and_Requirements_Specification.md`](../../../FluentEdge_Sprint2_Design_and_Requirements_Specification.md) |
 | Evidence index (Appendix D) | Same specification, Appendix D |
 | Governance audit | [`../E-09-github-governance/github-audit.md`](../E-09-github-governance/github-audit.md) |
 
@@ -78,21 +78,24 @@ This document consolidates Sprint 2 implementation evidence for FluentEdge: a lo
 
 ### E-01 — Architecture
 
-**Local runtime (Mermaid export):**
+Architecture evidence is maintained as Mermaid source in the design specification:
 
-![Local architecture](../E-01-architecture/local-architecture.png)
+| Diagram | Source |
+|---------|--------|
+| Local runtime architecture | `FluentEdge_Sprint2_Design_and_Requirements_Specification.md`, §2.4 |
+| AWS target architecture | `FluentEdge_Sprint2_Design_and_Requirements_Specification.md`, §2.5 |
+| Data and artifact lineage | `FluentEdge_Sprint2_Design_and_Requirements_Specification.md`, §5.7 |
+| Prediction request sequence | `FluentEdge_Sprint2_Design_and_Requirements_Specification.md`, §6.2.1 |
 
-**AWS target profile:**
-
-![AWS target architecture](../E-01-architecture/aws-target-architecture.png)
-
-Source: design specification §2.4–2.5.
+See [`../E-01-architecture/README.md`](../E-01-architecture/README.md).
 
 ---
 
 ### E-02 — Requirements review
 
-![Requirements issue #1](../E-02-requirements/requirements-review.png)
+![Requirements backlog/table](../E-02-requirements/requirements-review.png)
+
+![Sprint 2 Project board](../E-09-github-governance/project-board-sprint2.png)
 
 ---
 
@@ -174,9 +177,11 @@ Live capture (2026-07-08): label `pass`, confidence ~0.96, phrase `the quick bro
 
 ### E-09 — GitHub governance
 
-![Project custom fields](../E-09-github-governance/project-fields.png)
+![Project custom fields export](../E-09-github-governance/project-fields.png)
 
 ![GitHub Project board](../E-09-github-governance/project-board-sprint2.png)
+
+![Repository overview](../E-09-github-governance/repository-overview.png)
 
 Full audit: [`../E-09-github-governance/github-audit.md`](../E-09-github-governance/github-audit.md)
 
@@ -186,7 +191,7 @@ Full audit: [`../E-09-github-governance/github-audit.md`](../E-09-github-governa
 
 ### E-10 — Final traceability
 
-![Open issues traceability](../E-10-final-review/traceability-review.png)
+![Final traceability review](../E-10-final-review/traceability-review.png)
 
 Supporting summary: [`../SPRINT2_EVIDENCE_SUMMARY.md`](../SPRINT2_EVIDENCE_SUMMARY.md)
 

@@ -9,9 +9,9 @@
 **Instructor:** Ryan Woodward  
 **Submission Date:** July 2026  
 **Document Version:** 2.0  
-**Document Status:** Editable Sprint 2 design baseline
+**Document Status:** Sprint 2 evidence-synchronized baseline
 
-> **Evidence status:** Replace every bracketed evidence placeholder before final submission. Do not mark an item complete unless the linked issue, commit, workflow run, screenshot, or report actually exists.
+> **Evidence status:** Local implementation evidence was verified against the repository, local Docker stack, and stored screenshots. GitHub web UI captures that require an authenticated browser session are explicitly listed as manual evidence before final submission.
 
 ---
 
@@ -44,7 +44,7 @@
 | Team structure | Solo CLC team |
 | Related baseline | Sprint 1 Project Proposal dated June 28, 2026 |
 | Project tracking | GitHub Issues and GitHub Projects, approved as the Jira replacement |
-| Documentation | Repository Markdown files and Confluence pages unless the instructor approves a different documentation tool |
+| Documentation | Repository Markdown files and GitHub evidence package; Confluence evidence requires an instructor waiver or separate attachment |
 | Source control | GitHub |
 | Primary implementation | Local Docker and AWS-compatible local tooling |
 | Target cloud environment | Amazon Web Services |
@@ -52,8 +52,7 @@
 
 ### Editing and Evidence Instructions
 
-- Replace every `[INSERT ...]` placeholder with the requested evidence.
-- Use direct links to the exact GitHub issue, GitHub Project, pull request, commit, Actions run, Confluence page, report, or stored screenshot.
+- Use direct links to the exact GitHub issue, GitHub Project, pull request, commit, Actions run, Confluence page or waiver, report, or stored screenshot.
 - Keep screenshots in `docs/evidence/` and use relative Markdown links whenever possible.
 - Keep credentials, access keys, tokens, and private user data out of the repository.
 - Export this Markdown document to PDF only after links, diagrams, and evidence have been reviewed.
@@ -159,8 +158,8 @@ The local profile is the minimum required implementation. The AWS target profile
 # 2. System Overview
 
 > **Evidence E-01 - Final architecture:**  
-> Screenshot: `docs/evidence/E-01-architecture/local-architecture.png`  
-> Source file: [Design spec §2.4–2.5](FluentEdge_Sprint2_Design_and_Requirements_Specification.md#24-local-runtime-architecture)  
+> Evidence note: diagrams are maintained as Mermaid source in this specification, sections 2.4 and 2.5.
+> Evidence README: [`docs/evidence/E-01-architecture/README.md`](docs/evidence/E-01-architecture/README.md)
 > Related GitHub issue: [#1](https://github.com/DanielAndi/fluentedge/issues/1)
 
 ## 2.1 Product Vision
@@ -193,44 +192,93 @@ FluentEdge provides fast, consistent, and observable speaking feedback while dem
 
 ```mermaid
 flowchart LR
-    U[Learner Browser] -->|HTTPS/HTTP local| API[FastAPI Service]
-    API -->|Put/Get object| S3[(LocalStack S3 or local adapter)]
-    API -->|Load approved artifact| REG[MLflow Model Registry]
-    API --> INF[Inference Module]
-    INF --> API
-    API --> MET[Prometheus Metrics]
-    MET --> GRAF[Grafana Dashboard]
-    API --> LOG[Structured Local Logs]
+    subgraph Client["Learner workstation"]
+        U["Browser UI<br/>upload WAV/FLAC/MP3/M4A"]
+    end
 
-    DATA[Public Speech Dataset] --> PIPE[Local Training Pipeline]
-    PIPE --> S3
-    PIPE --> EVAL[Evaluation and Quality Gates]
-    EVAL -->|Approved model| REG
-    EVAL -->|Failed gate| ISSUE[GitHub Issue / Project Item]
-    GRAF -->|Alert evidence| ISSUE
+    subgraph Runtime["Docker Compose local runtime"]
+        API["FastAPI service<br/>/health /predict /metrics"]
+        INF["Inference module<br/>feature extraction + scoring"]
+        S3[("LocalStack S3<br/>uploads + artifacts")]
+        LOG["Structured local logs<br/>request IDs, no raw audio"]
+    end
 
-    GH[GitHub Repository and Actions] -->|Test, lint, build| API
-    GH -->|Track work| PROJ[GitHub Project]
+    subgraph MLOps["Local MLOps services"]
+        PIPE["Local training pipeline<br/>validate -> train -> evaluate"]
+        REG["MLflow tracking<br/>runs + model registry"]
+        MET["Prometheus<br/>metrics scrape"]
+        GRAF["Grafana<br/>operations dashboard"]
+    end
+
+    subgraph Governance["GitHub governance"]
+        GH["Repository + Actions<br/>lint, tests, scans, image build"]
+        PROJ["GitHub Project #4<br/>issues, fields, evidence"]
+        ISSUE["Review issue<br/>quality, drift, rollback, evidence gaps"]
+    end
+
+    DATA["Synthetic/public speech data"] --> PIPE
+    U -->|"multipart request"| API
+    API -->|"store temporary object"| S3
+    API --> INF
+    INF -->|"load approved artifact"| REG
+    INF -->|"prediction result"| API
+    API --> LOG
+    API --> MET
+    MET --> GRAF
+    PIPE -->|"datasets, metrics, artifacts"| S3
+    PIPE -->|"runs + candidate models"| REG
+    REG -->|"approved version only"| INF
+    PIPE -->|"gate failure or exception"| ISSUE
+    GRAF -->|"threshold evidence"| ISSUE
+    GH -->|"validated commit"| API
+    GH --> PROJ
+    PROJ --> ISSUE
 ```
 
 ## 2.5 AWS Target Architecture
 
 ```mermaid
 flowchart LR
-    U[Learner Browser] --> AGW[Amazon API Gateway]
-    AGW --> L[AWS Lambda or container API]
-    L --> S3[(Amazon S3)]
-    L --> SM[Amazon SageMaker AI Endpoint]
-    SM --> L
-    L --> CW[Amazon CloudWatch]
+    subgraph Edge["Learner access"]
+        U["Learner browser"]
+        CDN["Static hosting / CDN<br/>(optional UI hosting)"]
+    end
 
-    DATA[Public Speech Dataset] --> P[SageMaker-compatible Pipeline]
-    P --> TR[Processing and Training]
-    TR --> EV[Evaluation Gate]
-    EV --> MR[Model Registry]
-    MR --> SM
-    CW --> AL[Alarm and Human Review]
-    AL --> GI[GitHub Issue / Project]
+    subgraph Serving["AWS serving plane"]
+        AGW["Amazon API Gateway"]
+        API["Lambda, App Runner, ECS,<br/>or SageMaker-compatible API container"]
+        S3[("Amazon S3<br/>uploads + artifacts")]
+        SM["SageMaker AI endpoint<br/>approved model only"]
+    end
+
+    subgraph Training["AWS target ML pipeline"]
+        DATA["Public speech dataset"]
+        PIPE["SageMaker-compatible pipeline"]
+        PROC["Processing jobs<br/>validation + features"]
+        TRAIN["Training jobs<br/>candidate comparison"]
+        EVAL["Evaluation gate<br/>metrics + model card"]
+        MR["SageMaker Model Registry"]
+    end
+
+    subgraph Ops["Operations and governance"]
+        CW["CloudWatch metrics/logs"]
+        ALARM["Alarm + human review"]
+        GH["GitHub Issue / Project"]
+        OIDC["GitHub Actions OIDC<br/>manual deployment only"]
+    end
+
+    U --> CDN
+    U --> AGW
+    AGW --> API
+    API --> S3
+    API --> SM
+    SM --> API
+    API --> CW
+    DATA --> PIPE --> PROC --> TRAIN --> EVAL
+    EVAL -->|"approved"| MR --> SM
+    EVAL -->|"failed gate"| GH
+    CW --> ALARM --> GH
+    OIDC -->|"reviewed deploy"| API
 ```
 
 ## 2.6 Local-to-AWS Component Mapping
@@ -343,8 +391,8 @@ flowchart LR
 # 4. Non-Functional Requirements
 
 > **Evidence E-03 - Non-functional verification:**  
-> Test report: [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) (JUnit/coverage artifacts)  
-> Security scan: [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) (gitleaks + pip-audit)  
+> Test report: [CI run 28911390804](https://github.com/DanielAndi/fluentedge/actions/runs/28911390804) (JUnit/coverage artifacts)
+> Security scan: [CI run 28911390804](https://github.com/DanielAndi/fluentedge/actions/runs/28911390804) (gitleaks + pip-audit)
 > Performance screenshot: `docs/evidence/E-03-non-functional/performance.png`
 
 | ID | Category | Requirement | Measurement |
@@ -476,6 +524,27 @@ No private student voice recordings will be collected for model training during 
 | Metrics and logs | Local volumes | 30 to 90 days for prototype evidence | No raw audio, tokens, or full transcripts |
 | Evidence screenshots | `docs/evidence/` | Through final grading | Review for secrets before commit |
 
+## 5.7 Data and Artifact Lineage
+
+```mermaid
+flowchart TB
+    SRC["Source dataset or synthetic fixtures"] --> MAN["Raw manifest<br/>clip_id, path, transcript, label"]
+    MAN --> VAL["Validation report<br/>schema, duplicates, decode, duration"]
+    VAL --> CLEAN["Clean manifest<br/>accepted clips only"]
+    CLEAN --> SPLIT["Deterministic split<br/>train / validation / test"]
+    SPLIT --> FEAT["Feature matrix<br/>text + acoustic features"]
+    FEAT --> CAND["Candidate models<br/>logistic regression + random forest"]
+    CAND --> EVAL["Evaluation report<br/>macro F1, WER, CER, latency"]
+    EVAL --> CARD["Model card<br/>limitations + approval context"]
+    EVAL --> REG["MLflow registered model<br/>fluentedge-baseline"]
+    REG --> PROD["Approved local model version"]
+    PROD --> API["FastAPI inference service"]
+    API --> METRICS["Prometheus and Grafana evidence"]
+    VAL --> EVID["docs/evidence/E-04-data"]
+    EVAL --> EVID
+    CARD --> EVID
+```
+
 ---
 
 # 6. System Architecture
@@ -515,6 +584,32 @@ No private student voice recordings will be collected for model training during 
 | 8 | Training pipeline to storage | Filesystem or S3-compatible SDK | Datasets, features, models, reports |
 | 9 | Training pipeline to MLflow | MLflow tracking API | Parameters, metrics, artifacts, model version |
 | 10 | CI to repository | GitHub Actions | Test, scan, build, and evidence output |
+
+### 6.2.1 Prediction Request Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Learner
+    participant UI as Browser UI
+    participant API as FastAPI /predict
+    participant Store as Storage adapter
+    participant Model as Inference module
+    participant Registry as MLflow registry
+    participant Metrics as Prometheus metrics
+
+    Learner->>UI: Choose phrase and audio file
+    UI->>API: POST /predict multipart request
+    API->>API: Validate prompt, media type, size, and duration
+    API->>Store: Write temporary upload with generated object key
+    API->>Registry: Resolve approved model version and checksum
+    Registry-->>API: Approved artifact metadata
+    API->>Model: Score attempt with prompt and stored audio reference
+    Model-->>API: score, label, confidence, feedback categories
+    API->>Metrics: Emit count, latency, label, dependency status
+    API-->>UI: JSON response with request_id and prototype disclaimer
+    UI-->>Learner: Display pass/needs_review feedback
+```
 
 ## 6.3 Repository Structure
 
@@ -586,24 +681,49 @@ fluentedge/
 > Metrics report: [`artifacts/runs/467fb3aa/evaluation_report.json`](artifacts/runs/467fb3aa/evaluation_report.json)  
 > Model card: [`artifacts/runs/467fb3aa/model_card.md`](artifacts/runs/467fb3aa/model_card.md)  
 > MLflow screenshot: `docs/evidence/E-06-training-evaluation/mlflow-screenshot.png`
+> Current recapture note: local pipeline recapture also produced `artifacts/runs/0723e041/` and MLflow model version 4; the API health evidence still shows approved serving version 1 from `.env`.
 
 ## 7.1 Training Pipeline Steps
 
 ```mermaid
 flowchart LR
-    A[Ingest] --> B[Validate]
-    B --> C[Clean and Normalize]
-    C --> D[Split]
-    D --> E[Feature Extraction]
-    E --> F[Train Candidates]
-    F --> G[Evaluate]
-    G --> H{Quality Gates Pass?}
-    H -->|No| I[Report and GitHub Issue]
-    H -->|Yes| J[Register Model]
-    J --> K[Approve Manually]
-    K --> L[Deploy Locally]
-    L --> M[Monitor]
-    M --> N[Retraining Review]
+    subgraph DataPrep["Data preparation"]
+        A["Ingest manifest"]
+        B["Validate schema<br/>audio decode + duplicates"]
+        C["Clean and normalize<br/>text + audio"]
+        D["Reproducible split"]
+        E["Feature extraction"]
+    end
+
+    subgraph ModelDev["Model development"]
+        F["Train candidate A<br/>logistic regression"]
+        G["Train candidate B<br/>random forest"]
+        H["Evaluate candidates<br/>F1, WER, CER, latency"]
+        Q{"Quality gates pass?"}
+    end
+
+    subgraph Release["Human-controlled release"]
+        R["Register in MLflow"]
+        APM["Approve model version"]
+        DEP["Restart/load local API"]
+        RB["Rollback to prior approved version"]
+    end
+
+    subgraph Operate["Operate and review"]
+        MON["Prometheus + Grafana"]
+        DRIFT["Drift or reliability review"]
+        ISSUE["GitHub issue / project evidence"]
+    end
+
+    A --> B --> C --> D --> E
+    E --> F --> H
+    E --> G --> H
+    H --> Q
+    Q -->|"yes"| R --> APM --> DEP --> MON
+    Q -->|"no"| ISSUE
+    MON --> DRIFT --> ISSUE
+    ISSUE -->|"approved remediation"| A
+    RB --> DEP
 ```
 
 | Stage | Input | Output | Quality gate |
@@ -887,7 +1007,7 @@ file=@attempt.wav
 > Repository: [DanielAndi/fluentedge](https://github.com/DanielAndi/fluentedge)  
 > GitHub Project: [FluentEdge MLOps #4](https://github.com/users/DanielAndi/projects/4)  
 > Sprint milestone: [Sprint 2 - Design and Local Baseline](https://github.com/DanielAndi/fluentedge/milestone/1)  
-> Confluence space/page: Instructor waiver — GitHub repository and Project evidence used in place of Confluence for Sprint 2 prototype (pending written approval if required)
+> Confluence space/page: GitHub repository and Project evidence are used in place of Confluence only if the instructor waiver is attached or confirmed in writing.
 
 ## 10.1 GitHub Project Configuration
 
@@ -944,7 +1064,7 @@ Use the following naming convention:
 docs/evidence/
 ├── E-01-architecture/
 ├── E-02-requirements/
-├── E-03-nonfunctional/
+├── E-03-non-functional/
 ├── E-04-data/
 ├── E-05-infrastructure/
 ├── E-06-training-evaluation/
@@ -960,6 +1080,22 @@ Screenshots shall include a short Markdown caption with:
 - What the image proves.
 - Related issue or requirement.
 - Any limitation.
+
+### 10.3.1 Evidence Review Workflow
+
+```mermaid
+flowchart TB
+    REQ["Requirement ID<br/>FR-* or NFR-*"] --> ISSUE["GitHub issue<br/>scope + acceptance criteria"]
+    ISSUE --> WORK["Implementation or documentation work"]
+    WORK --> TEST["Verification<br/>tests, lint, scans, health, screenshots"]
+    TEST --> EVID["Evidence artifact<br/>docs/evidence/E-xx"]
+    EVID --> SPEC["Specification reference<br/>section evidence block + Appendix D"]
+    SPEC --> REVIEW["Final review<br/>manual screenshot checklist"]
+    REVIEW --> DECISION{"Evidence complete?"}
+    DECISION -->|"yes"| SUBMIT["Export final PDF / submit"]
+    DECISION -->|"manual evidence needed"| MANUAL["Authenticated capture by project owner"]
+    MANUAL --> EVID
+```
 
 ## 10.4 Documentation Responsibilities
 
@@ -1131,16 +1267,43 @@ Daniel Grijalva is the sole team member and therefore owns planning, analysis, a
 
 # Appendix D - Evidence Index
 
+## D.1 Evidence Verification Findings
+
+| Evidence file | Verification finding | Action |
+|---|---|---|
+| `docs/evidence/E-08-ui-api/ui-screenshot.png` | Good local evidence. Recaptured from the running stack; shows phrase input, uploaded fixture, successful `pass` result, confidence, feedback, and request ID. | Keep |
+| `docs/evidence/E-06-training-evaluation/mlflow-screenshot.png` | Good local evidence after recapture. Shows the `fluentedge-training` experiment with multiple logged runs and linked `fluentedge-baseline` model output. | Keep |
+| `docs/evidence/E-07-deployment-monitoring/grafana-dashboard.png` | Good local evidence after recapture. Shows the provisioned `FluentEdge Operations` dashboard with request rate, p95 latency, dependency health, and prediction distribution. | Keep |
+| `docs/evidence/E-07-deployment-monitoring/prometheus-targets.png` | Good local evidence. Shows `fluentedge-api` target up. | Keep |
+| `docs/evidence/E-05-infrastructure/health-check-output.png` | Good local evidence. Shows six health checks passed: Docker services, S3 bucket, API, MLflow, Prometheus, and Grafana. | Keep |
+| `docs/evidence/E-03-non-functional/performance.png` and `docs/evidence/E-07-deployment-monitoring/actions-ci-green.png` | Good non-functional evidence. The performance image proves local `/health` p95 latency, and the Actions screenshot proves CI lint/test/security checks passed. | Keep |
+| `docs/evidence/E-04-data/eda-screenshot.png` | Usable as evaluation-report evidence. It is a text rendering of synthetic fixture metrics, not a notebook-style EDA chart. | Keep with limitation |
+| `docs/evidence/E-01-architecture/README.md` | Good evidence. Architecture diagrams are embedded as Mermaid source in this specification and referenced by section. | Keep |
+| `docs/evidence/E-02-requirements/requirements-review.png` | Good requirements evidence. Shows the GitHub Project backlog/table with Sprint 2 issues, assignees, and statuses. | Keep |
+| `docs/evidence/E-09-github-governance/project-board-sprint2.png` | Good governance evidence. Shows the GitHub Project Kanban board grouped by workflow status. | Keep |
+| `docs/evidence/E-09-github-governance/repository-overview.png` | Good repository evidence. Shows the repository file tree, README, commits, branches, and project overview. | Keep |
+| `docs/evidence/E-10-final-review/traceability-review.png` | Good final-review evidence. Shows Appendix D.3 Evidence Index with evidence IDs, paths, statuses, and notes. | Keep |
+| `docs/evidence/E-09-github-governance/project-fields.png` | Usable as a text export rendered to image, but a real GitHub Project field-settings screenshot is stronger. | Manual recapture recommended |
+
+## D.2 Manual Evidence Required From Project Owner
+
+The following evidence must be gathered from Daniel Grijalva's authenticated browser session or account settings before final submission:
+
+- GitHub Project #4 field settings showing Status, Priority, Sprint, Workstream, Requirement IDs, Target Date, Evidence, and Risk: save to `docs/evidence/E-09-github-governance/project-fields.png`.
+- Branch protection/rules screenshot if enabled; otherwise attach the branch-protection guide and note that account-plan limitations prevented enforcement.
+- Written Confluence waiver or Confluence page screenshot if the syllabus still requires Confluence evidence.
+
+## D.3 Evidence Index
+
 | ID | Evidence area | Required item | Direct link or relative path | Status | Notes |
 |---|---|---|---|---|---|
-| E-01 | Architecture | Final local and AWS-target diagrams | `docs/evidence/E-01-architecture/` | Complete | PNG exports from spec Mermaid |
-| E-02 | Requirements | Requirements review issue/PR and GitHub Project | [#1](https://github.com/DanielAndi/fluentedge/issues/1), [Project #4](https://github.com/users/DanielAndi/projects/4) | Complete | `docs/evidence/E-02-requirements/requirements-review.png` |
-| E-03 | Non-functional | Performance, security, and reliability evidence | [CI run 28911390804](https://github.com/DanielAndi/fluentedge/actions/runs/28911390804) | Complete | `docs/evidence/E-03-non-functional/performance.png` |
+| E-01 | Architecture | Final local and AWS-target diagrams | [`docs/evidence/E-01-architecture/README.md`](docs/evidence/E-01-architecture/README.md), spec sections 2.4 and 2.5 | Complete | Diagrams are maintained as Mermaid source in the design specification |
+| E-02 | Requirements | Requirements review issue/PR and GitHub Project | [#1](https://github.com/DanielAndi/fluentedge/issues/1), [Project #4](https://github.com/users/DanielAndi/projects/4) | Complete | `docs/evidence/E-02-requirements/requirements-review.png`, `docs/evidence/E-09-github-governance/project-board-sprint2.png` |
+| E-03 | Non-functional | Performance, security, and reliability evidence | [CI run 28911390804](https://github.com/DanielAndi/fluentedge/actions/runs/28911390804) | Complete | CI screenshot plus `/health` p95 screenshot and report |
 | E-04 | Data | Dataset card, schema, validation, EDA | [`docs/evidence/E-04-data/README.md`](docs/evidence/E-04-data/README.md) | Complete | `docs/evidence/E-04-data/eda-screenshot.png` |
 | E-05 | Infrastructure | Compose, SAM/IaC, startup and health checks | [`docs/evidence/E-05-infrastructure/README.md`](docs/evidence/E-05-infrastructure/README.md) | Complete | `docs/evidence/E-05-infrastructure/health-check-output.png` |
-| E-06 | Training | Pipeline run, metrics, model card, MLflow | [`docs/evidence/E-06-training-evaluation/README.md`](docs/evidence/E-06-training-evaluation/README.md) | Complete | `artifacts/runs/467fb3aa/`, MLflow screenshot |
+| E-06 | Training | Pipeline run, metrics, model card, MLflow | [`docs/evidence/E-06-training-evaluation/README.md`](docs/evidence/E-06-training-evaluation/README.md) | Complete | `artifacts/runs/467fb3aa/`; recapture also produced `artifacts/runs/0723e041/` |
 | E-07 | Deployment | CI, local deployment, dashboard, rollback | [`docs/evidence/E-07-deployment-monitoring/ci-cd.md`](docs/evidence/E-07-deployment-monitoring/ci-cd.md) | Complete | Grafana + rollback-test.md |
 | E-08 | UI/API | UI, OpenAPI, responses, operations dashboard | [`docs/evidence/E-08-ui-api/README.md`](docs/evidence/E-08-ui-api/README.md) | Complete | ui-screenshot.png, openapi.json |
-| E-09 | Governance | Repository, GitHub Project, milestone, documentation | [`docs/evidence/E-09-github-governance/github-audit.md`](docs/evidence/E-09-github-governance/github-audit.md) | Mostly complete | Project fields/board screenshots |
-| E-10 | Final review | Traceability, checklist, submission proof | [`docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md`](docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md) | Complete | traceability-review.png |
-
+| E-09 | Governance | Repository, GitHub Project, milestone, documentation | [`docs/evidence/E-09-github-governance/github-audit.md`](docs/evidence/E-09-github-governance/github-audit.md) | Complete | Project board, repository overview, project field export, and governance audit exist |
+| E-10 | Final review | Traceability, checklist, submission proof | [`docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md`](docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md), `docs/evidence/E-10-final-review/traceability-review.png` | Complete | Final evidence index screenshot and final submission summary exist |

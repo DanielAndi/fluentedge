@@ -6,14 +6,14 @@
 ## Repository
 
 - URL: https://github.com/DanielAndi/fluentedge
-- Commit: [`db1a67c`](https://github.com/DanielAndi/fluentedge/commit/db1a67cd68efb402386870d66422a4a9617c61ed)
+- Commit baseline: [`a282667`](https://github.com/DanielAndi/fluentedge/commit/a282667) with local evidence refresh edits pending commit
 - Branch: `main`
 
 ## GitHub Project
 
 - URL: https://github.com/users/DanielAndi/projects/4
 - Project number: 4
-- Manual view configuration completed: **No** (saved views and board screenshots still required; see [`MANUAL_SCREENSHOT_CHECKLIST.md`](MANUAL_SCREENSHOT_CHECKLIST.md))
+- Manual view configuration completed: **Partially** (Kanban board and Backlog table screenshots captured; Evidence Review view still optional/recommended)
 
 ## Automated Verification
 
@@ -23,7 +23,7 @@
 | Format check | `ruff format --check .` | pass | Local run 2026-07-08; CI run above |
 | Lint | `ruff check .` | pass | Local run 2026-07-08; CI run above |
 | Compose config | `docker compose -f infrastructure/compose.yaml config` | pass | [`ci-cd.md`](E-07-deployment-monitoring/ci-cd.md); CI job in run above |
-| Docs validation | `python scripts/validate_docs.py` | pass (18 files; 53 `[INSERT]` placeholders remain) | CI [Docs run 28910958996](https://github.com/DanielAndi/fluentedge/actions/runs/28910958996) |
+| Docs validation | `python scripts/validate_docs.py` | pass; placeholder scan now reports only instructional references, not missing spec evidence placeholders | CI [Docs run 28910958996](https://github.com/DanielAndi/fluentedge/actions/runs/28910958996) |
 | Container build + smoke | `Container` workflow | pass | [run 28910958927](https://github.com/DanielAndi/fluentedge/actions/runs/28910958927) |
 | GitHub governance audit | `scripts/export_project_evidence.sh` | pass | [`github-audit.md`](E-09-github-governance/github-audit.md) |
 | Secret scan | `gitleaks/gitleaks-action@v2` in CI | pass on `main` | CI run 28910958932 |
@@ -56,28 +56,28 @@
 ## Missing Evidence
 
 - [ ] Branch protection settings screenshot (optional if rules not enabled on account plan)
-- [ ] GitHub Project saved views: Roadmap, Evidence Review (confirm in web UI)
+- [ ] GitHub Project saved views: Roadmap, Evidence Review (confirm in web UI, optional/recommended)
 - [ ] Manual Local Evidence workflow run + artifact download (optional)
 - [ ] Written Confluence waiver if syllabus requires Confluence page
 
 ## Captured 2026-07-08
 
-- [x] Architecture diagrams (`docs/evidence/E-01-architecture/`)
-- [x] Requirements review screenshot
+- [x] Architecture diagrams are embedded as Mermaid in the design specification and documented in `docs/evidence/E-01-architecture/README.md`
+- [x] Requirements review / backlog table screenshot
 - [x] Performance latency report + screenshot
 - [x] EDA / evaluation screenshot
 - [x] Health-check output (text + screenshot)
-- [x] MLflow, Grafana, Prometheus, learner UI screenshots
+- [x] MLflow, Grafana, Prometheus, learner UI screenshots refreshed from local stack
 - [x] GitHub Actions CI screenshot
-- [x] Project fields export + board capture
-- [x] Traceability / issues screenshot
+- [x] Project board capture + repository overview + fields export
+- [x] Traceability / evidence index screenshot
 - [x] Final submission document (`docs/evidence/E-10-final-review/SPRINT2_FINAL_SUBMISSION.md`)
 
 ## Known Limitations
 
-- Evidence collection ran with the Docker Compose stack **stopped** on 2026-07-08; infrastructure, API live-check, and monitoring screenshots rely on prior 2026-07-06 runs documented in area README files.
+- Local UI, MLflow, Grafana, and Prometheus screenshots were refreshed from a running Docker Compose stack during the evidence audit.
 - All nine Sprint 2 GitHub issues remain **open**; acceptance criteria are not fully satisfied (monitoring, manual Project views, final evidence review).
 - Training metrics on synthetic fixtures (macro F1 1.0) demonstrate pipeline function only, not real-world accuracy.
 - `pip-audit` reports known advisories for pinned `mlflow==2.18.0` dependencies; CI treats the scan as non-blocking.
 - Three Dependabot PRs remain open (#11 Python 3.14, #12 gitleaks v3, #15 mlflow 3.x) and are intentionally unmerged.
-- 53 `[INSERT]` placeholders remain in the design specification body (screenshots and Confluence waiver); Appendix D rows are updated with current paths and statuses.
+- The design specification no longer has unresolved evidence placeholders; remaining placeholder-scan matches are instructional references in prompts/checklists.
