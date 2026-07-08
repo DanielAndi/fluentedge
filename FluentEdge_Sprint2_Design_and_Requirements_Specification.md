@@ -159,9 +159,9 @@ The local profile is the minimum required implementation. The AWS target profile
 # 2. System Overview
 
 > **Evidence E-01 - Final architecture:**  
-> Screenshot: `[INSERT RELATIVE IMAGE PATH]`  
-> Source file: `[INSERT DIAGRAM SOURCE LINK]`  
-> Related GitHub issue: `[INSERT ISSUE LINK]`
+> Screenshot: `docs/evidence/E-01-architecture/local-architecture.png` (pending capture)  
+> Source file: [Design spec §2.4–2.5 Mermaid diagrams](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/FluentEdge_Sprint2_Design_and_Requirements_Specification.md#24-local-runtime-architecture)  
+> Related GitHub issue: [#1 Finalize Sprint 2 design and requirements specification](https://github.com/DanielAndi/fluentedge/issues/1)
 
 ## 2.1 Product Vision
 
@@ -263,9 +263,9 @@ flowchart LR
 # 3. Functional Requirements
 
 > **Evidence E-02 - Requirements review:**  
-> GitHub Project link: `[INSERT PROJECT LINK]`  
-> Requirements issue or pull request: `[INSERT LINK]`  
-> Review screenshot: `[INSERT RELATIVE IMAGE PATH]`
+> GitHub Project link: [FluentEdge MLOps (Project #4)](https://github.com/users/DanielAndi/projects/4)  
+> Requirements issue or pull request: [#1 Finalize Sprint 2 design and requirements specification](https://github.com/DanielAndi/fluentedge/issues/1)  
+> Review screenshot: `docs/evidence/E-02-requirements/requirements-review.png` (pending capture)
 
 ## 3.1 Data Input and Preprocessing Requirements
 
@@ -343,9 +343,9 @@ flowchart LR
 # 4. Non-Functional Requirements
 
 > **Evidence E-03 - Non-functional verification:**  
-> Test report: `[INSERT LINK]`  
-> Security scan: `[INSERT LINK]`  
-> Performance screenshot: `[INSERT IMAGE PATH]`
+> Test report: [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) (JUnit/coverage artifacts)  
+> Security scan: [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) (gitleaks + pip-audit)  
+> Performance screenshot: `docs/evidence/E-03-non-functional/performance.png` (pending capture)
 
 | ID | Category | Requirement | Measurement |
 |---|---|---|---|
@@ -394,10 +394,10 @@ flowchart LR
 # 5. Data Requirements
 
 > **Evidence E-04 - Data evidence:**  
-> Dataset card: `[INSERT LINK]`  
-> Validation report: `[INSERT LINK]`  
-> Schema file: `[INSERT LINK]`  
-> EDA screenshot: `[INSERT IMAGE PATH]`
+> Dataset card: [`docs/data/dataset_card.md`](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/docs/data/dataset_card.md)  
+> Validation report: [`artifacts/runs/467fb3aa/evaluation_report.json`](artifacts/runs/467fb3aa/evaluation_report.json) (local pipeline output)  
+> Schema file: [`ml/data/schema.py`](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/ml/data/schema.py)  
+> EDA screenshot: `docs/evidence/E-04-data/eda-screenshot.png` (pending capture)
 
 ## 5.1 Data Sources and Licensing
 
@@ -481,9 +481,9 @@ No private student voice recordings will be collected for model training during 
 # 6. System Architecture
 
 > **Evidence E-05 - Architecture implementation:**  
-> Compose file: `[INSERT LINK]`  
-> SAM or IaC file: `[INSERT LINK]`  
-> Health-check output: `[INSERT LINK OR IMAGE]`
+> Compose file: [`infrastructure/compose.yaml`](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/infrastructure/compose.yaml)  
+> SAM or IaC file: [`infrastructure/sam/template.yaml`](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/infrastructure/sam/template.yaml)  
+> Health-check output: [`docs/evidence/E-05-infrastructure/README.md`](docs/evidence/E-05-infrastructure/README.md) (2026-07-06 run); screenshot pending
 
 ## 6.1 Component Breakdown
 
@@ -582,10 +582,10 @@ fluentedge/
 # 7. Training and Evaluation
 
 > **Evidence E-06 - Training and evaluation:**  
-> Pipeline run: `[INSERT LINK]`  
-> Metrics report: `[INSERT LINK]`  
-> Model card: `[INSERT LINK]`  
-> MLflow screenshot: `[INSERT IMAGE PATH]`
+> Pipeline run: [`docs/evidence/E-06-training-evaluation/README.md`](docs/evidence/E-06-training-evaluation/README.md)  
+> Metrics report: [`artifacts/runs/467fb3aa/evaluation_report.json`](artifacts/runs/467fb3aa/evaluation_report.json)  
+> Model card: [`artifacts/runs/467fb3aa/model_card.md`](artifacts/runs/467fb3aa/model_card.md)  
+> MLflow screenshot: `docs/evidence/E-06-training-evaluation/mlflow-screenshot.png` (pending capture)
 
 ## 7.1 Training Pipeline Steps
 
@@ -698,10 +698,10 @@ Each model run shall record:
 # 8. Deployment Requirements
 
 > **Evidence E-07 - Deployment and monitoring:**  
-> Compose startup evidence: `[INSERT LINK OR IMAGE]`  
-> CI run: `[INSERT LINK]`  
-> Dashboard: `[INSERT IMAGE PATH]`  
-> Rollback test: `[INSERT LINK]`
+> Compose startup evidence: [`docs/evidence/E-05-infrastructure/README.md`](docs/evidence/E-05-infrastructure/README.md)  
+> CI run: [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932)  
+> Dashboard: `docs/evidence/E-07-deployment-monitoring/grafana-dashboard.png` (pending capture)  
+> Rollback test: `docs/evidence/E-07-deployment-monitoring/rollback-test.md` (pending capture; issue [#8](https://github.com/DanielAndi/fluentedge/issues/8) open)
 
 ## 8.1 Local Environment Setup
 
@@ -797,10 +797,10 @@ The repository shall document commands that:
 # 9. User Interface Requirements
 
 > **Evidence E-08 - UI and API:**  
-> Learner UI screenshot: `[INSERT IMAGE PATH]`  
-> OpenAPI link: `[INSERT LINK]`  
-> Dashboard screenshot: `[INSERT IMAGE PATH]`  
-> Sample API response: `[INSERT LINK]`
+> Learner UI screenshot: `docs/evidence/E-08-ui-api/ui-screenshot.png` (pending capture)  
+> OpenAPI link: [`docs/evidence/E-08-ui-api/openapi.json`](docs/evidence/E-08-ui-api/openapi.json)  
+> Dashboard screenshot: `docs/evidence/E-07-deployment-monitoring/grafana-dashboard.png` (pending capture)  
+> Sample API response: [`docs/evidence/E-08-ui-api/sample_response.json`](docs/evidence/E-08-ui-api/sample_response.json)
 
 ## 9.1 Learner Interface
 
@@ -884,10 +884,10 @@ file=@attempt.wav
 # 10. Project Governance and Evidence
 
 > **Evidence E-09 - GitHub governance:**  
-> Repository: `[INSERT REPOSITORY LINK]`  
-> GitHub Project: `[INSERT PROJECT LINK]`  
-> Sprint milestone: `[INSERT MILESTONE LINK]`  
-> Confluence space/page: `[INSERT LINK OR WAIVER NOTE]`
+> Repository: [DanielAndi/fluentedge](https://github.com/DanielAndi/fluentedge)  
+> GitHub Project: [FluentEdge MLOps #4](https://github.com/users/DanielAndi/projects/4)  
+> Sprint milestone: [Sprint 2 - Design and Local Baseline](https://github.com/DanielAndi/fluentedge/milestone/1)  
+> Confluence space/page: Instructor waiver — GitHub repository and Project evidence used in place of Confluence for Sprint 2 prototype (pending written approval if required)
 
 ## 10.1 GitHub Project Configuration
 
@@ -1006,8 +1006,8 @@ Mozilla Foundation. (n.d.). *Common Voice datasets*. Common Voice. Retrieved Jul
 # Appendix A - Requirements Traceability Matrix
 
 > **Evidence E-10 - Final traceability review:**  
-> Review issue or pull request: `[INSERT LINK]`  
-> Traceability screenshot/report: `[INSERT PATH OR LINK]`
+> Review issue or pull request: [#9 Synchronize Sprint 2 evidence](https://github.com/DanielAndi/fluentedge/issues/9)  
+> Traceability screenshot/report: [`docs/evidence/SPRINT2_EVIDENCE_SUMMARY.md`](docs/evidence/SPRINT2_EVIDENCE_SUMMARY.md)
 
 | Requirement group | Implementation location | Verification | Required evidence |
 |---|---|---|---|
@@ -1133,14 +1133,14 @@ Daniel Grijalva is the sole team member and therefore owns planning, analysis, a
 
 | ID | Evidence area | Required item | Direct link or relative path | Status | Notes |
 |---|---|---|---|---|---|
-| E-01 | Architecture | Final local and AWS-target diagrams | `[INSERT]` | Not added | |
-| E-02 | Requirements | Requirements review issue/PR and GitHub Project | `[INSERT]` | Not added | |
-| E-03 | Non-functional | Performance, security, and reliability evidence | `[INSERT]` | Not added | |
-| E-04 | Data | Dataset card, schema, validation, EDA | `[INSERT]` | Not added | |
-| E-05 | Infrastructure | Compose, SAM/IaC, startup and health checks | `[INSERT]` | Not added | |
-| E-06 | Training | Pipeline run, metrics, model card, MLflow | `[INSERT]` | Not added | |
-| E-07 | Deployment | CI, local deployment, dashboard, rollback | `[INSERT]` | Not added | |
-| E-08 | UI/API | UI, OpenAPI, responses, operations dashboard | `[INSERT]` | Not added | |
-| E-09 | Governance | Repository, GitHub Project, milestone, documentation | `[INSERT]` | Not added | |
-| E-10 | Final review | Traceability, checklist, submission proof | `[INSERT]` | Not added | |
+| E-01 | Architecture | Final local and AWS-target diagrams | [`docs/evidence/MANUAL_SCREENSHOT_CHECKLIST.md`](docs/evidence/MANUAL_SCREENSHOT_CHECKLIST.md) §1–2; [spec §2.4 Mermaid](https://github.com/DanielAndi/fluentedge/blob/db1a67cd68efb402386870d66422a4a9617c61ed/FluentEdge_Sprint2_Design_and_Requirements_Specification.md#24-local-runtime-architecture) | Partial | PNG exports pending |
+| E-02 | Requirements | Requirements review issue/PR and GitHub Project | [#1](https://github.com/DanielAndi/fluentedge/issues/1), [Project #4](https://github.com/users/DanielAndi/projects/4) | Partial | Review screenshot pending |
+| E-03 | Non-functional | Performance, security, and reliability evidence | [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) | Partial | Performance screenshot pending |
+| E-04 | Data | Dataset card, schema, validation, EDA | [`docs/evidence/E-04-data/README.md`](docs/evidence/E-04-data/README.md), [`docs/data/dataset_card.md`](docs/data/dataset_card.md) | Partial | EDA screenshot pending |
+| E-05 | Infrastructure | Compose, SAM/IaC, startup and health checks | [`docs/evidence/E-05-infrastructure/README.md`](docs/evidence/E-05-infrastructure/README.md) | Partial | Fresh health screenshot pending |
+| E-06 | Training | Pipeline run, metrics, model card, MLflow | [`docs/evidence/E-06-training-evaluation/README.md`](docs/evidence/E-06-training-evaluation/README.md), `artifacts/runs/467fb3aa/` | Partial | MLflow screenshot pending |
+| E-07 | Deployment | CI, local deployment, dashboard, rollback | [`docs/evidence/E-07-deployment-monitoring/ci-cd.md`](docs/evidence/E-07-deployment-monitoring/ci-cd.md) | Partial | Grafana + rollback evidence pending |
+| E-08 | UI/API | UI, OpenAPI, responses, operations dashboard | [`docs/evidence/E-08-ui-api/README.md`](docs/evidence/E-08-ui-api/README.md) | Partial | UI and dashboard screenshots pending |
+| E-09 | Governance | Repository, GitHub Project, milestone, documentation | [`docs/evidence/E-09-github-governance/github-audit.md`](docs/evidence/E-09-github-governance/github-audit.md) | Partial | Project view screenshots pending |
+| E-10 | Final review | Traceability, checklist, submission proof | [`docs/evidence/SPRINT2_EVIDENCE_SUMMARY.md`](docs/evidence/SPRINT2_EVIDENCE_SUMMARY.md) | Partial | Final review screenshot pending |
 

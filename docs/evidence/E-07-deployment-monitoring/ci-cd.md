@@ -63,33 +63,43 @@ docker rm -f fluentedge-smoke
 
 | Workflow | Run URL |
 |----------|---------|
-| CI | `[INSERT CI RUN URL]` |
-| Container | `[INSERT CONTAINER RUN URL]` |
-| Docs | `[INSERT DOCS RUN URL]` |
-| Manual Local Evidence | `[INSERT MANUAL EVIDENCE RUN URL]` |
+| CI | https://github.com/DanielAndi/fluentedge/actions/runs/28910958932 |
+| Container | https://github.com/DanielAndi/fluentedge/actions/runs/28910958927 |
+| Docs | https://github.com/DanielAndi/fluentedge/actions/runs/28910958996 |
+| Manual Local Evidence | Not run yet — trigger from Actions → **Manual Local Evidence** |
+
+Commit verified: [`db1a67c`](https://github.com/DanielAndi/fluentedge/commit/db1a67cd68efb402386870d66422a4a9617c61ed)
 
 ## Results
 
 | Check | Status | Notes |
 |-------|--------|-------|
 | Workflow YAML syntax | pass | Validated locally |
-| Format check (`ruff format --check`) | fail | 11 files need formatting (pre-existing) |
-| Lint (`ruff check`) | fail | 39 findings (pre-existing; 19 auto-fixable) |
+| Format check (`ruff format --check`) | pass | Verified locally 2026-07-08 |
+| Lint (`ruff check`) | pass | Verified locally 2026-07-08 |
 | Unit tests + JUnit/coverage | pass | 41 passed, 2 skipped, 1 integration excluded |
-| `pip-audit` | warn | Reports known `mlflow==2.18.0` / `pyarrow` CVEs; scan uploaded, non-blocking |
-| Gitleaks secret scan | GitHub only | Requires `gitleaks/gitleaks-action` on GitHub-hosted runner |
-| Compose config | pass | `docker compose -f infrastructure/compose.yaml config` |
-| Container build + smoke | pass | `/health` returns 200 (degraded without MLflow is expected) |
-| Docs validation | pass | 18 Markdown files; 60 `[INSERT]` placeholders reported |
+| `pip-audit` | warn | Known `mlflow==2.18.0` / `pyarrow` CVEs; non-blocking in CI |
+| Gitleaks secret scan | pass | [CI run 28910958932](https://github.com/DanielAndi/fluentedge/actions/runs/28910958932) |
+| Compose config | pass | `.env` optional for CI validation |
+| Container build + smoke | pass | [Container run 28910958927](https://github.com/DanielAndi/fluentedge/actions/runs/28910958927) |
+| Docs validation | pass | 18 Markdown files; placeholders tracked separately |
 | Dependabot config | pass | `.github/dependabot.yml` present |
+
+## Merged CI dependency PRs
+
+- https://github.com/DanielAndi/fluentedge/pull/10 (`upload-artifact` v7)
+- https://github.com/DanielAndi/fluentedge/pull/13 (`checkout` v7)
+- https://github.com/DanielAndi/fluentedge/pull/14 (`setup-python` v6)
 
 ## Remaining manual evidence
 
-- [ ] GitHub Actions run screenshots after first push (all four workflows)
-- [ ] Branch protection rule screenshot or settings URL (see `docs/project-management/branch-protection.md`)
-- [ ] Grafana dashboard screenshot (`http://localhost:3000`)
-- [ ] MLflow run / registered model screenshot
-- [ ] Optional: run **Manual Local Evidence** workflow and download artifact bundle
+See [`../MANUAL_SCREENSHOT_CHECKLIST.md`](../MANUAL_SCREENSHOT_CHECKLIST.md) for the full list. Highlights:
+
+- [ ] Grafana dashboard screenshot
+- [ ] MLflow run screenshot
+- [ ] GitHub Project board / saved-view screenshots
+- [ ] Branch protection screenshot (if enabled)
+- [ ] Run **Manual Local Evidence** workflow and record artifact URL
 
 ## Checks that only run on GitHub
 

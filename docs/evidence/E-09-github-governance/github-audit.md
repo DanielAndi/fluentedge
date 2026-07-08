@@ -1,6 +1,6 @@
 # GitHub Governance Audit
 
-Generated: 2026-07-08T00:05:27Z
+Generated: 2026-07-08T01:40:10Z
 
 ## Repository
 
@@ -42,6 +42,10 @@ Generated: 2026-07-08T00:05:27Z
 - `status:blocked` #5319E7 - Blocked work
 - `evidence-required` #0052CC - Evidence still needed
 - `sprint:2` #BFDADC - Sprint 2
+- `dependencies` #0366d6 - Pull requests that update a dependency file
+- `github_actions` #000000 - Pull requests that update GitHub Actions code
+- `docker` #21ceff - Pull requests that update docker code
+- `python` #2b67c6 - Pull requests that update python code
 
 ## Milestones
 
@@ -99,6 +103,11 @@ Generated: 2026-07-08T00:05:27Z
 
 ## Workflows
 
+CI	active	309040518
+Container	active	309040519
+Docs	active	309040520
+Manual Local Evidence	active	309040521
+Dependabot Updates	active	309040540
 
 ## Manual Configuration Still Required
 

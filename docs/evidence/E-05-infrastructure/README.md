@@ -52,4 +52,4 @@ sam build --use-container -t infrastructure/sam/template.yaml  # Build Succeeded
 
 ## GitHub Issue
 
-`[INSERT ISSUE LINK]` — pending remote repository and GitHub Project setup (FR-PM-001).
+[#3 Build local AWS-compatible infrastructure](https://github.com/DanielAndi/fluentedge/issues/3)
