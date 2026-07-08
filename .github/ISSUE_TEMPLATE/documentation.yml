@@ -1,0 +1,42 @@
+name: Documentation
+description: Track documentation, evidence, and requirements updates.
+title: "[Docs]: "
+labels:
+  - type:docs
+  - evidence-required
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: Describe the documentation or evidence update.
+    validations:
+      required: true
+  - type: input
+    id: requirement_ids
+    attributes:
+      label: Requirement IDs
+      description: Example: FR-PM-005, NFR-MAINT-002
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      value: "- [ ] Documentation is updated.\n- [ ] Evidence links are factual and open successfully.\n- [ ] Limitations or pending items are documented."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link the document, pull request, screenshot, report, or exported evidence file.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks or Blockers
+      description: List missing evidence, pending reviews, or "None known."
+    validations:
+      required: true

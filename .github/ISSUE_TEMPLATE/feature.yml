@@ -1,0 +1,43 @@
+name: Feature
+description: Track a new FluentEdge capability or project-management work item.
+title: "[Feature]: "
+labels:
+  - type:feature
+  - evidence-required
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the capability or governance result this issue should deliver.
+    validations:
+      required: true
+  - type: input
+    id: requirement_ids
+    attributes:
+      label: Requirement IDs
+      description: Example: FR-INF-001, FR-PM-003, NFR-MAINT-001
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Use checkboxes for verifiable completion criteria.
+      value: "- [ ] "
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link commits, pull requests, workflow runs, screenshots, reports, or evidence files.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks or Blockers
+      description: List known risks, dependencies, or "None known."
+    validations:
+      required: true

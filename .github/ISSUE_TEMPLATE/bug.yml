@@ -1,0 +1,42 @@
+name: Bug
+description: Track a defect, failing check, or incorrect behavior.
+title: "[Bug]: "
+labels:
+  - type:bug
+  - evidence-required
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: Describe the defect and the expected corrected behavior.
+    validations:
+      required: true
+  - type: input
+    id: requirement_ids
+    attributes:
+      label: Requirement IDs
+      description: Example: FR-API-004, NFR-REL-001
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      value: "- [ ] Reproduction is documented.\n- [ ] Fix is implemented or the limitation is documented.\n- [ ] Regression evidence is linked."
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Link logs, test output, workflow runs, screenshots, reports, or commits.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks or Blockers
+      description: List impact, blocked work, or "None known."
+    validations:
+      required: true
