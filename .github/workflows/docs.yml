@@ -1,0 +1,51 @@
+name: Docs
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.md"
+      - "scripts/validate_docs.py"
+      - ".github/workflows/docs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate Markdown structure and links
+        run: python scripts/validate_docs.py
+
+      - name: Report unresolved placeholders
+        run: |
+          python scripts/validate_docs.py --placeholders-only --report-file placeholder-report.md
+          cat placeholder-report.md
+
+      - name: Fail on placeholders for release branches
+        if: startsWith(github.ref_name, 'release/')
+        run: |
+          if grep -q '\[INSERT\]' placeholder-report.md; then
+            echo "Unresolved [INSERT] placeholders remain on release branch."
+            exit 1
+          fi
+
+      - name: Upload placeholder report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-placeholder-report
+          path: placeholder-report.md
+          if-no-files-found: ignore

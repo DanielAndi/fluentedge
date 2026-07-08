@@ -1,0 +1,102 @@
+name: Manual Local Evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      include_integration:
+        description: Run integration-marked tests (may need services)
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  contents: read
+
+jobs:
+  collect-evidence:
+    name: Collect CI evidence artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements-dev.lock
+
+      - name: Install locked dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.lock
+          pip install -e .
+
+      - name: Run unit tests and reports
+        run: |
+          pytest tests/unit -v -m "not integration" \
+            --junitxml=evidence/test-results/junit.xml \
+            --cov=api --cov=ml \
+            --cov-report=term-missing \
+            --cov-report=xml:evidence/coverage.xml
+
+      - name: Run integration tests
+        if: inputs.include_integration == 'true'
+        run: |
+          pytest tests/unit -v -m integration \
+            --junitxml=evidence/test-results/junit-integration.xml
+
+      - name: Lint and format checks
+        run: |
+          ruff check . | tee evidence/ruff-check.txt
+          ruff format --check . | tee evidence/ruff-format.txt
+
+      - name: Dependency vulnerability scan
+        run: pip-audit -r requirements-dev.lock | tee evidence/pip-audit.txt
+
+      - name: Compose config validation
+        run: docker compose -f infrastructure/compose.yaml config | tee evidence/compose-config.txt
+
+      - name: Write manual evidence checklist
+        run: |
+          cat > evidence/MANUAL_EVIDENCE_CHECKLIST.md <<'EOF'
+          # Manual Local Evidence Checklist
+
+          This workflow packages automated checks only. Capture the following locally and attach to Appendix D evidence:
+
+          ## Required manual screenshots
+
+          - [ ] Grafana operations dashboard (`http://localhost:3000`) showing FluentEdge panels
+          - [ ] MLflow experiment run with registered model version
+          - [ ] GitHub Actions workflow run summary (after pushing CI workflows)
+          - [ ] GitHub Project Sprint board or Requirements table view
+          - [ ] API `/docs` OpenAPI UI with a successful `/predict` request (if model is approved)
+
+          ## Optional local commands (not run in this workflow)
+
+          - `make up && make bootstrap && make health` — full stack startup evidence
+          - `make test-s3` — LocalStack S3 integration from host network
+          - `make sam-build` — SAM container build (requires Docker)
+
+          ## Notes
+
+          - Docker-in-Docker is not required for this workflow.
+          - Do not upload secrets, `.env`, or raw audio containing PII.
+          EOF
+
+      - name: Package safe evidence artifacts
+        run: |
+          tar -czf fluentedge-local-evidence.tar.gz evidence/
+          sha256sum fluentedge-local-evidence.tar.gz > fluentedge-local-evidence.tar.gz.sha256
+
+      - name: Upload evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: fluentedge-local-evidence
+          path: |
+            fluentedge-local-evidence.tar.gz
+            fluentedge-local-evidence.tar.gz.sha256

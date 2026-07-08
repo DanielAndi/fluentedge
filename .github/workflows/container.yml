@@ -1,0 +1,74 @@
+name: Container
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: fluentedge-api
+  # Set to true and configure REGISTRY_* secrets to enable optional push.
+  ENABLE_REGISTRY_PUSH: "false"
+
+jobs:
+  build-and-smoke:
+    name: Build and smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build API image
+        run: |
+          docker build -f api/Dockerfile -t "${IMAGE_NAME}:${{ github.sha }}" .
+          docker tag "${IMAGE_NAME}:${{ github.sha }}" "${IMAGE_NAME}:latest"
+
+      - name: Container smoke test
+        run: |
+          cid="$(docker run -d \
+            -e STORAGE_BACKEND=filesystem \
+            -e FILESYSTEM_STORAGE_ROOT=/tmp/storage \
+            -e APPROVED_MODEL_URI=models:/fluentedge-baseline/1 \
+            -e APPROVED_MODEL_VERSION=1 \
+            -p 8000:8000 \
+            "${IMAGE_NAME}:${{ github.sha }}")"
+          trap 'docker rm -f "$cid"' EXIT
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:8000/health >/dev/null; then
+              curl -fsS http://localhost:8000/health
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs "$cid"
+          exit 1
+
+      - name: Write build metadata
+        run: |
+          mkdir -p build-metadata
+          cat > build-metadata/image.json <<EOF
+          {
+            "image": "${IMAGE_NAME}",
+            "tags": ["${{ github.sha }}", "latest"],
+            "git_sha": "${{ github.sha }}",
+            "git_ref": "${{ github.ref_name }}",
+            "registry_push_enabled": ${ENABLE_REGISTRY_PUSH},
+            "built_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+
+      - name: Upload build metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: container-build-metadata
+          path: build-metadata/image.json
+
+      - name: Optional registry push
+        if: env.ENABLE_REGISTRY_PUSH == 'true'
+        run: |
+          echo "Registry push is disabled by default."
+          echo "Configure ENABLE_REGISTRY_PUSH, REGISTRY, and credentials before enabling."
