@@ -55,7 +55,7 @@
 - Use direct links to the exact GitHub issue, GitHub Project, pull request, commit, Actions run, Confluence page or waiver, report, or stored screenshot.
 - Keep screenshots in `docs/evidence/` and use relative Markdown links whenever possible.
 - Keep credentials, access keys, tokens, and private user data out of the repository.
-- Export this Markdown document to PDF only after links, diagrams, and evidence have been reviewed.
+- Export this Markdown document to PDF only after links, diagrams, and evidence have been reviewed. Cursor's `Markdown PDF` extension must have `markdown-pdf.mermaidServer` set to a reachable Mermaid JavaScript file; this workspace uses `.vscode/settings.json` to load the local Mermaid bundle instead of the default CDN.
 - Use APA-style author-date citations in the body and complete APA-style entries in the references section.
 
 ---
@@ -191,46 +191,36 @@ FluentEdge provides fast, consistent, and observable speaking feedback while dem
 ## 2.4 Local Runtime Architecture
 
 ```mermaid
-flowchart LR
-    subgraph Client["Learner workstation"]
-        U["Browser UI<br/>upload WAV/FLAC/MP3/M4A"]
-    end
+graph LR
+    U[Browser UI uploads audio]
+    API[FastAPI service]
+    INF[Inference module]
+    S3[LocalStack S3 storage]
+    LOG[Structured local logs]
+    PIPE[Local training pipeline]
+    REG[MLflow tracking and registry]
+    MET[Prometheus metrics]
+    GRAF[Grafana dashboard]
+    GH[GitHub repository and Actions]
+    PROJ[GitHub Project]
+    ISSUE[Review issue]
+    DATA[Synthetic or public speech data]
 
-    subgraph Runtime["Docker Compose local runtime"]
-        API["FastAPI service<br/>/health /predict /metrics"]
-        INF["Inference module<br/>feature extraction + scoring"]
-        S3[("LocalStack S3<br/>uploads + artifacts")]
-        LOG["Structured local logs<br/>request IDs, no raw audio"]
-    end
-
-    subgraph MLOps["Local MLOps services"]
-        PIPE["Local training pipeline<br/>validate -> train -> evaluate"]
-        REG["MLflow tracking<br/>runs + model registry"]
-        MET["Prometheus<br/>metrics scrape"]
-        GRAF["Grafana<br/>operations dashboard"]
-    end
-
-    subgraph Governance["GitHub governance"]
-        GH["Repository + Actions<br/>lint, tests, scans, image build"]
-        PROJ["GitHub Project #4<br/>issues, fields, evidence"]
-        ISSUE["Review issue<br/>quality, drift, rollback, evidence gaps"]
-    end
-
-    DATA["Synthetic/public speech data"] --> PIPE
-    U -->|"multipart request"| API
-    API -->|"store temporary object"| S3
+    DATA --> PIPE
+    U -- multipart request --> API
+    API -- temporary object --> S3
     API --> INF
-    INF -->|"load approved artifact"| REG
-    INF -->|"prediction result"| API
+    INF -- approved artifact --> REG
+    INF -- prediction result --> API
     API --> LOG
     API --> MET
     MET --> GRAF
-    PIPE -->|"datasets, metrics, artifacts"| S3
-    PIPE -->|"runs + candidate models"| REG
-    REG -->|"approved version only"| INF
-    PIPE -->|"gate failure or exception"| ISSUE
-    GRAF -->|"threshold evidence"| ISSUE
-    GH -->|"validated commit"| API
+    PIPE -- datasets metrics artifacts --> S3
+    PIPE -- runs and candidate models --> REG
+    REG -- approved version only --> INF
+    PIPE -- gate failure or exception --> ISSUE
+    GRAF -- threshold evidence --> ISSUE
+    GH -- validated commit --> API
     GH --> PROJ
     PROJ --> ISSUE
 ```
@@ -238,34 +228,23 @@ flowchart LR
 ## 2.5 AWS Target Architecture
 
 ```mermaid
-flowchart LR
-    subgraph Edge["Learner access"]
-        U["Learner browser"]
-        CDN["Static hosting / CDN<br/>(optional UI hosting)"]
-    end
-
-    subgraph Serving["AWS serving plane"]
-        AGW["Amazon API Gateway"]
-        API["Lambda, App Runner, ECS,<br/>or SageMaker-compatible API container"]
-        S3[("Amazon S3<br/>uploads + artifacts")]
-        SM["SageMaker AI endpoint<br/>approved model only"]
-    end
-
-    subgraph Training["AWS target ML pipeline"]
-        DATA["Public speech dataset"]
-        PIPE["SageMaker-compatible pipeline"]
-        PROC["Processing jobs<br/>validation + features"]
-        TRAIN["Training jobs<br/>candidate comparison"]
-        EVAL["Evaluation gate<br/>metrics + model card"]
-        MR["SageMaker Model Registry"]
-    end
-
-    subgraph Ops["Operations and governance"]
-        CW["CloudWatch metrics/logs"]
-        ALARM["Alarm + human review"]
-        GH["GitHub Issue / Project"]
-        OIDC["GitHub Actions OIDC<br/>manual deployment only"]
-    end
+graph LR
+    U[Learner browser]
+    CDN[Static hosting or CDN]
+    AGW[Amazon API Gateway]
+    API[Lambda or container API]
+    S3[Amazon S3]
+    SM[SageMaker AI endpoint]
+    DATA[Public speech dataset]
+    PIPE[SageMaker compatible pipeline]
+    PROC[Processing jobs]
+    TRAIN[Training jobs]
+    EVAL[Evaluation gate]
+    MR[SageMaker Model Registry]
+    CW[CloudWatch metrics and logs]
+    ALARM[Alarm and human review]
+    GH[GitHub Issue or Project]
+    OIDC[GitHub Actions OIDC]
 
     U --> CDN
     U --> AGW
@@ -275,10 +254,11 @@ flowchart LR
     SM --> API
     API --> CW
     DATA --> PIPE --> PROC --> TRAIN --> EVAL
-    EVAL -->|"approved"| MR --> SM
-    EVAL -->|"failed gate"| GH
+    EVAL -- approved --> MR
+    MR --> SM
+    EVAL -- failed gate --> GH
     CW --> ALARM --> GH
-    OIDC -->|"reviewed deploy"| API
+    OIDC -- reviewed deploy --> API
 ```
 
 ## 2.6 Local-to-AWS Component Mapping
@@ -527,20 +507,20 @@ No private student voice recordings will be collected for model training during 
 ## 5.7 Data and Artifact Lineage
 
 ```mermaid
-flowchart TB
-    SRC["Source dataset or synthetic fixtures"] --> MAN["Raw manifest<br/>clip_id, path, transcript, label"]
-    MAN --> VAL["Validation report<br/>schema, duplicates, decode, duration"]
-    VAL --> CLEAN["Clean manifest<br/>accepted clips only"]
-    CLEAN --> SPLIT["Deterministic split<br/>train / validation / test"]
-    SPLIT --> FEAT["Feature matrix<br/>text + acoustic features"]
-    FEAT --> CAND["Candidate models<br/>logistic regression + random forest"]
-    CAND --> EVAL["Evaluation report<br/>macro F1, WER, CER, latency"]
-    EVAL --> CARD["Model card<br/>limitations + approval context"]
-    EVAL --> REG["MLflow registered model<br/>fluentedge-baseline"]
-    REG --> PROD["Approved local model version"]
-    PROD --> API["FastAPI inference service"]
-    API --> METRICS["Prometheus and Grafana evidence"]
-    VAL --> EVID["docs/evidence/E-04-data"]
+graph TB
+    SRC[Source dataset or synthetic fixtures] --> MAN[Raw manifest]
+    MAN --> VAL[Validation report]
+    VAL --> CLEAN[Clean manifest]
+    CLEAN --> SPLIT[Deterministic split]
+    SPLIT --> FEAT[Feature matrix]
+    FEAT --> CAND[Candidate models]
+    CAND --> EVAL[Evaluation report]
+    EVAL --> CARD[Model card]
+    EVAL --> REG[MLflow registered model]
+    REG --> PROD[Approved local model version]
+    PROD --> API[FastAPI inference service]
+    API --> METRICS[Prometheus and Grafana evidence]
+    VAL --> EVID[Data evidence folder]
     EVAL --> EVID
     CARD --> EVID
 ```
@@ -589,17 +569,16 @@ flowchart TB
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor Learner
+    participant Learner
     participant UI as Browser UI
-    participant API as FastAPI /predict
+    participant API as Predict API
     participant Store as Storage adapter
     participant Model as Inference module
     participant Registry as MLflow registry
     participant Metrics as Prometheus metrics
 
     Learner->>UI: Choose phrase and audio file
-    UI->>API: POST /predict multipart request
+    UI->>API: POST predict multipart request
     API->>API: Validate prompt, media type, size, and duration
     API->>Store: Write temporary upload with generated object key
     API->>Registry: Resolve approved model version and checksum
@@ -607,8 +586,8 @@ sequenceDiagram
     API->>Model: Score attempt with prompt and stored audio reference
     Model-->>API: score, label, confidence, feedback categories
     API->>Metrics: Emit count, latency, label, dependency status
-    API-->>UI: JSON response with request_id and prototype disclaimer
-    UI-->>Learner: Display pass/needs_review feedback
+    API-->>UI: JSON response with request id and prototype disclaimer
+    UI-->>Learner: Display pass or needs review feedback
 ```
 
 ## 6.3 Repository Structure
@@ -686,43 +665,33 @@ fluentedge/
 ## 7.1 Training Pipeline Steps
 
 ```mermaid
-flowchart LR
-    subgraph DataPrep["Data preparation"]
-        A["Ingest manifest"]
-        B["Validate schema<br/>audio decode + duplicates"]
-        C["Clean and normalize<br/>text + audio"]
-        D["Reproducible split"]
-        E["Feature extraction"]
-    end
-
-    subgraph ModelDev["Model development"]
-        F["Train candidate A<br/>logistic regression"]
-        G["Train candidate B<br/>random forest"]
-        H["Evaluate candidates<br/>F1, WER, CER, latency"]
-        Q{"Quality gates pass?"}
-    end
-
-    subgraph Release["Human-controlled release"]
-        R["Register in MLflow"]
-        APM["Approve model version"]
-        DEP["Restart/load local API"]
-        RB["Rollback to prior approved version"]
-    end
-
-    subgraph Operate["Operate and review"]
-        MON["Prometheus + Grafana"]
-        DRIFT["Drift or reliability review"]
-        ISSUE["GitHub issue / project evidence"]
-    end
+graph LR
+    A[Ingest manifest]
+    B[Validate schema and audio]
+    C[Clean and normalize]
+    D[Reproducible split]
+    E[Feature extraction]
+    F[Train logistic regression]
+    G[Train random forest]
+    H[Evaluate candidates]
+    Q{Quality gates pass}
+    R[Register in MLflow]
+    APM[Approve model version]
+    DEP[Restart local API]
+    RB[Rollback approved version]
+    MON[Prometheus and Grafana]
+    DRIFT[Drift or reliability review]
+    ISSUE[GitHub issue or project evidence]
 
     A --> B --> C --> D --> E
     E --> F --> H
     E --> G --> H
     H --> Q
-    Q -->|"yes"| R --> APM --> DEP --> MON
-    Q -->|"no"| ISSUE
+    Q -- yes --> R
+    R --> APM --> DEP --> MON
+    Q -- no --> ISSUE
     MON --> DRIFT --> ISSUE
-    ISSUE -->|"approved remediation"| A
+    ISSUE -- approved remediation --> A
     RB --> DEP
 ```
 
@@ -1084,16 +1053,16 @@ Screenshots shall include a short Markdown caption with:
 ### 10.3.1 Evidence Review Workflow
 
 ```mermaid
-flowchart TB
-    REQ["Requirement ID<br/>FR-* or NFR-*"] --> ISSUE["GitHub issue<br/>scope + acceptance criteria"]
-    ISSUE --> WORK["Implementation or documentation work"]
-    WORK --> TEST["Verification<br/>tests, lint, scans, health, screenshots"]
-    TEST --> EVID["Evidence artifact<br/>docs/evidence/E-xx"]
-    EVID --> SPEC["Specification reference<br/>section evidence block + Appendix D"]
-    SPEC --> REVIEW["Final review<br/>manual screenshot checklist"]
-    REVIEW --> DECISION{"Evidence complete?"}
-    DECISION -->|"yes"| SUBMIT["Export final PDF / submit"]
-    DECISION -->|"manual evidence needed"| MANUAL["Authenticated capture by project owner"]
+graph TB
+    REQ[Requirement ID] --> ISSUE[GitHub issue]
+    ISSUE --> WORK[Implementation or documentation work]
+    WORK --> TEST[Verification checks]
+    TEST --> EVID[Evidence artifact]
+    EVID --> SPEC[Specification reference]
+    SPEC --> REVIEW[Final review]
+    REVIEW --> DECISION{Evidence complete}
+    DECISION -- yes --> SUBMIT[Export final PDF and submit]
+    DECISION -- manual evidence needed --> MANUAL[Authenticated capture]
     MANUAL --> EVID
 ```
 
