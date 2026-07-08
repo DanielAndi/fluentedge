@@ -1,0 +1,9 @@
+# SAM CLI local configuration example (do not commit secrets)
+version = 0.1
+
+[default.local_start_api.parameters]
+warm_containers = "EAGER"
+
+[default.build.parameters]
+cached = true
+parallel = true

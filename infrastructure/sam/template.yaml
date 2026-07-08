@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: FluentEdge optional local API Gateway/Lambda adapter (FR-INF-004)
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: python3.11
+    Architectures:
+      - x86_64
+
+Resources:
+  FluentEdgeApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: local
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/health/
+      Handler: app.lambda_handler
+      Events:
+        Health:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FluentEdgeApi
+            Path: /health
+            Method: get
+        PredictProxy:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FluentEdgeApi
+            Path: /predict
+            Method: post
+
+Outputs:
+  ApiUrl:
+    Description: Local API Gateway URL when using sam local start-api
+    Value: !Sub 'http://127.0.0.1:3000/local'
