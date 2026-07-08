@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment and secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Data and artifacts (not committed)
+data/raw/
+data/processed/
+artifacts/
+mlruns/
+.aws-sam/
+
+# IDE and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Local storage fallback
+.local-storage/
+
+# Evidence with sensitive content (review before commit)
+# docs/evidence/ is tracked; large binaries are not
