@@ -29,6 +29,7 @@ MERMAID_TYPES = (
 LINK_PATTERN = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 HEADING_PATTERN = re.compile(r"^#\s+\S", re.MULTILINE)
 EVIDENCE_REQUIRED_SECTIONS = ("## Commands run", "## Results")
+GENERATED_LINK_ROOTS = {"artifacts"}
 
 
 def iter_markdown_files() -> list[Path]:
@@ -73,6 +74,12 @@ def validate_links(path: Path, text: str, errors: list[str]) -> None:
         if target.startswith("<") and target.endswith(">"):
             target = target[1:-1]
         target_path = (path.parent / target.split("#", 1)[0]).resolve()
+        try:
+            repo_relative = target_path.relative_to(ROOT)
+        except ValueError:
+            repo_relative = None
+        if repo_relative and repo_relative.parts[0] in GENERATED_LINK_ROOTS:
+            continue
         if not target_path.exists():
             errors.append(f"{path}: broken relative link -> {target}")
 
