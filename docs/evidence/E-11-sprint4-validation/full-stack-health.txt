@@ -1,0 +1,18 @@
+[health] FluentEdge health check
+[health] Compose file: infrastructure/compose.yaml
+[health] PASS: Docker services running
+[health] PASS: S3 upload bucket reachable
+
+--- API /health summary ---
+status: ok
+model_ready: True
+  storage: ok
+  mlflow: ok
+  model: ready
+[health] PASS: API /health responds
+[health] PASS: MLflow responds
+[health] PASS: Prometheus responds
+[health] PASS: Grafana responds
+
+[health] Results: 6 passed, 0 failed
+[health] All checks passed

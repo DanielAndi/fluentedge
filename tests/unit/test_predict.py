@@ -95,6 +95,48 @@ def test_predict_model_not_ready(client, api_env, monkeypatch):
     assert response.json()["error"]["code"] == "MODEL_NOT_READY"
 
 
+def test_predict_storage_failure_returns_controlled_503(
+    client, api_env, mock_model_loader, monkeypatch
+):
+    class UnavailableStorage:
+        def put_object(self, *args, **kwargs):
+            raise ConnectionError("injected storage outage")
+
+    monkeypatch.setattr(
+        "api.app.routers.predict.get_storage",
+        lambda settings: UnavailableStorage(),
+    )
+
+    with FIXTURE_WAV.open("rb") as handle:
+        response = client.post(
+            "/predict",
+            data={"expected_phrase": "the quick brown fox"},
+            files={"file": ("clip_000.wav", handle, "audio/wav")},
+        )
+
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "DEPENDENCY_UNAVAILABLE"
+
+
+def test_predict_model_load_failure_returns_controlled_503(
+    client, api_env, mock_model_loader, monkeypatch
+):
+    def fail_load():
+        raise OSError("injected model artifact outage")
+
+    monkeypatch.setattr(mock_model_loader, "load", fail_load)
+
+    with FIXTURE_WAV.open("rb") as handle:
+        response = client.post(
+            "/predict",
+            data={"expected_phrase": "the quick brown fox"},
+            files={"file": ("clip_000.wav", handle, "audio/wav")},
+        )
+
+    assert response.status_code == 503
+    assert response.json()["error"]["code"] == "MODEL_NOT_READY"
+
+
 def test_ready_when_model_configured(client, api_env, mock_model_loader):
     response = client.get("/ready")
     assert response.status_code == 200

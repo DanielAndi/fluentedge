@@ -9,6 +9,7 @@ ML_RUN = docker run --rm --network host -v "$(CURDIR):/app" -w /app python:3.11-
 
 .PHONY: setup up down logs health test bootstrap cleanup sam-build sam-local compose-config
 .PHONY: fixtures data-validate train evaluate register approve-model pipeline-local test-ml
+.PHONY: sprint4-validation sprint4-pdf artifact-inventory
 
 setup:
 	$(PYTHON) -m pip install -e ".[dev]"
@@ -83,3 +84,12 @@ test-ml-integration:
 test-api:
 	docker run --rm -v "$(CURDIR):/app" -w /app python:3.11-slim bash -c \
 		"pip install -q -e '.[dev]' && pytest tests/unit/test_predict.py tests/unit/test_health.py tests/unit/test_log_redaction.py tests/unit/test_path_traversal.py -v"
+
+sprint4-validation:
+	$(PYTHON) scripts/run_sprint4_validation.py
+
+sprint4-pdf:
+	$(PYTHON) scripts/render_sprint4_pdf.py
+
+artifact-inventory:
+	$(PYTHON) scripts/generate_artifact_inventory.py

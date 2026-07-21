@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-07-21T03:17:21.344187+00:00",
+  "python_version": "3.11.15",
+  "model_path": "artifacts/production/model.joblib",
+  "audio_fixture": "tests/fixtures/synthetic/clip_000.wav",
+  "startup_cycles": [
+    {
+      "cycle": 1,
+      "passed": true,
+      "health_status": 200,
+      "health_body": {
+        "status": "ok",
+        "service": "fluentedge-api",
+        "request_id": "req_2896fc54efc3",
+        "dependencies": {
+          "storage": {
+            "status": "ok",
+            "message": null,
+            "bucket": "fluentedge-uploads",
+            "version": null
+          },
+          "mlflow": {
+            "status": "ok",
+            "message": null,
+            "bucket": null,
+            "version": null
+          },
+          "model": {
+            "status": "ready",
+            "message": null,
+            "bucket": null,
+            "version": "sprint4-local-approved"
+          }
+        },
+        "model_ready": true
+      },
+      "ready_status": 200,
+      "ready_body": {
+        "status": "ready",
+        "service": "fluentedge-api",
+        "request_id": "req_98fe459ca104",
+        "model_ready": true,
+        "model_version": "sprint4-local-approved"
+      },
+      "log": "docs/evidence/E-11-sprint4-validation/startup-cycle-1.log"
+    },
+    {
+      "cycle": 2,
+      "passed": true,
+      "health_status": 200,
+      "health_body": {
+        "status": "ok",
+        "service": "fluentedge-api",
+        "request_id": "req_4995bf32b5ac",
+        "dependencies": {
+          "storage": {
+            "status": "ok",
+            "message": null,
+            "bucket": "fluentedge-uploads",
+            "version": null
+          },
+          "mlflow": {
+            "status": "ok",
+            "message": null,
+            "bucket": null,
+            "version": null
+          },
+          "model": {
+            "status": "ready",
+            "message": null,
+            "bucket": null,
+            "version": "sprint4-local-approved"
+          }
+        },
+        "model_ready": true
+      },
+      "ready_status": 200,
+      "ready_body": {
+        "status": "ready",
+        "service": "fluentedge-api",
+        "request_id": "req_d3586f127523",
+        "model_ready": true,
+        "model_version": "sprint4-local-approved"
+      },
+      "log": "docs/evidence/E-11-sprint4-validation/startup-cycle-2.log"
+    }
+  ],
+  "predict_performance": {
+    "requests": 30,
+    "min_ms": 18.203,
+    "p50_ms": 35.004,
+    "p95_ms": 84.749,
+    "max_ms": 134.34,
+    "target_p95_ms": 2000.0,
+    "all_status_200": true,
+    "unique_request_ids": true,
+    "passed": true
+  },
+  "health_performance": {
+    "requests": 30,
+    "min_ms": 10.716,
+    "p50_ms": 12.901,
+    "p95_ms": 36.732,
+    "max_ms": 37.568,
+    "all_status_200": true,
+    "all_service_status_ok": true
+  },
+  "concurrency": {
+    "simultaneous_requests": 5,
+    "all_status_200": true,
+    "unique_request_ids": true,
+    "leftover_upload_files": 0,
+    "passed": true
+  },
+  "rollback": {
+    "passed": true,
+    "algorithm": "SHA-256",
+    "approved_sha256": "c7016b8858bf0efa35c6f364cb2dc1307734d71c33975d299f8e8a0e5ae05e82",
+    "rejected_candidate_sha256": "526a237c50f33b78d1cb995160ac2c05cc9c5fb91ee45c7f93f1210655f7bd46",
+    "mismatch_detected": true,
+    "restored_sha256": "c7016b8858bf0efa35c6f364cb2dc1307734d71c33975d299f8e8a0e5ae05e82",
+    "restored_model_loadable": true
+  },
+  "passed": true
+}

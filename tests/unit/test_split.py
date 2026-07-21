@@ -1,5 +1,7 @@
 """Split reproducibility tests (FR-DI-006)."""
 
+import pytest
+
 from ml.data.schema import ClipRecord, SplitName
 from ml.data.split import assign_splits, manifest_hash
 
@@ -29,7 +31,27 @@ def test_no_speaker_overlap_between_splits():
     assert train_speakers.isdisjoint(test_speakers)
 
 
-def test_manifest_hash_stable():
+def test_six_speakers_produce_nonempty_partitions():
+    clips = [_clip(f"c{i}", f"speaker_{i}") for i in range(6)]
+
+    assigned = assign_splits(clips, seed=42)
+    split_counts = {split: sum(clip.split == split for clip in assigned) for split in SplitName}
+
+    assert split_counts == {
+        SplitName.TRAIN: 4,
+        SplitName.VALIDATION: 1,
+        SplitName.TEST: 1,
+    }
+
+
+def test_rejects_too_few_speakers_for_requested_partitions():
     clips = [_clip("a", "s1"), _clip("b", "s2")]
+
+    with pytest.raises(ValueError, match="At least 3 speaker groups"):
+        assign_splits(clips)
+
+
+def test_manifest_hash_stable():
+    clips = [_clip("a", "s1"), _clip("b", "s2"), _clip("c", "s3")]
     assigned = assign_splits(clips, seed=1)
     assert manifest_hash(assigned) == manifest_hash(assigned)

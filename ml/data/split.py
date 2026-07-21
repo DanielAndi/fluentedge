@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 import random
 from collections import defaultdict
 
@@ -17,8 +18,14 @@ def assign_splits(
     validation_ratio: float = 0.15,
 ) -> list[ClipRecord]:
     test_ratio = 1.0 - train_ratio - validation_ratio
-    if test_ratio < 0:
+    ratios = {
+        SplitName.TRAIN: train_ratio,
+        SplitName.VALIDATION: validation_ratio,
+        SplitName.TEST: test_ratio,
+    }
+    if train_ratio < 0 or validation_ratio < 0 or test_ratio < -1e-12:
         raise ValueError("train_ratio + validation_ratio must be <= 1.0")
+    ratios[SplitName.TEST] = max(0.0, test_ratio)
 
     groups: dict[str, list[ClipRecord]] = defaultdict(list)
     for clip in clips:
@@ -30,8 +37,32 @@ def assign_splits(
     rng.shuffle(group_keys)
 
     n = len(group_keys)
-    train_end = int(n * train_ratio)
-    val_end = train_end + int(n * validation_ratio)
+    requested_splits = [split for split, ratio in ratios.items() if ratio > 0]
+    if n < len(requested_splits):
+        raise ValueError(
+            f"At least {len(requested_splits)} speaker groups are required for nonempty "
+            f"partitions; received {n}"
+        )
+
+    counts = {
+        split: max(1, math.floor(n * ratio)) if ratio > 0 else 0 for split, ratio in ratios.items()
+    }
+    while sum(counts.values()) < n:
+        split = max(
+            requested_splits,
+            key=lambda name: (n * ratios[name] - counts[name], ratios[name]),
+        )
+        counts[split] += 1
+    while sum(counts.values()) > n:
+        reducible = [split for split in requested_splits if counts[split] > 1]
+        split = max(
+            reducible,
+            key=lambda name: (counts[name] - n * ratios[name], counts[name]),
+        )
+        counts[split] -= 1
+
+    train_end = counts[SplitName.TRAIN]
+    val_end = train_end + counts[SplitName.VALIDATION]
 
     split_map: dict[str, SplitName] = {}
     for idx, key in enumerate(group_keys):

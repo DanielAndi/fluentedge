@@ -66,7 +66,11 @@ make test-s3         # S3 adapter tests against LocalStack
 make test-ml         # data/ML unit tests
 make test-ml-integration  # full pipeline + MLflow (requires stack up)
 make retention-test
+make sprint4-validation  # 30-request load, concurrency, startup, and rollback evidence
+make artifact-inventory  # refresh SHA-256 evidence after report/PDF changes
 ```
+
+Sprint 4 results and limitations are indexed in `docs/evidence/E-11-sprint4-validation/README.md`.
 
 ## ML pipeline
 

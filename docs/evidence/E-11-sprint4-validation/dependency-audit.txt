@@ -1,0 +1,35 @@
+Found 32 known vulnerabilities in 2 packages
+Name    Version ID              Fix Versions
+------- ------- --------------- ------------
+mlflow  2.18.0  PYSEC-2025-17   2.19.0
+mlflow  2.18.0  PYSEC-2025-52   3.1.0
+mlflow  2.18.0  PYSEC-2026-94   3.11.0rc0
+mlflow  2.18.0  PYSEC-2026-93   3.11.1
+mlflow  2.18.0  PYSEC-2026-94   3.11.0rc0
+mlflow  2.18.0  PYSEC-2026-93   3.11.0rc0
+mlflow  2.18.0  PYSEC-2026-195  3.10.1
+mlflow  2.18.0  PYSEC-2026-424  3.9.0
+mlflow  2.18.0  PYSEC-2026-419
+mlflow  2.18.0  PYSEC-2026-421  3.8.0rc0
+mlflow  2.18.0  PYSEC-2026-425  3.9.0rc0
+mlflow  2.18.0  PYSEC-2026-423  3.8.1
+mlflow  2.18.0  PYSEC-2026-2220 3.11.0rc1
+mlflow  2.18.0  PYSEC-2026-1642 2.22.0rc0
+mlflow  2.18.0  PYSEC-2026-1646 2.20.3
+mlflow  2.18.0  PYSEC-2026-1640 2.22.4,3.0.0
+mlflow  2.18.0  PYSEC-2026-1660
+mlflow  2.18.0  PYSEC-2026-1639 3.4.0rc0
+mlflow  2.18.0  PYSEC-2026-1656 3.5.0
+mlflow  2.18.0  PYSEC-2026-2219 3.9.0
+mlflow  2.18.0  PYSEC-2026-2220 3.11.0rc0
+mlflow  2.18.0  PYSEC-2026-2221 3.10.0
+mlflow  2.18.0  PYSEC-2026-2222 3.11.0
+mlflow  2.18.0  PYSEC-2026-2654 3.10.0
+mlflow  2.18.0  PYSEC-2026-2655 3.11.0
+mlflow  2.18.0  PYSEC-2026-2656 3.9.0rc0
+mlflow  2.18.0  PYSEC-2026-2657
+mlflow  2.18.0  PYSEC-2026-2660 3.10.0
+mlflow  2.18.0  PYSEC-2026-2659 3.11.0rc0
+mlflow  2.18.0  PYSEC-2026-2661 3.8.0rc0
+mlflow  2.18.0  PYSEC-2026-2658 3.8.0rc0
+pyarrow 18.1.0  PYSEC-2026-113  23.0.1

@@ -1,6 +1,6 @@
-# Sprint 2 Evidence Index
+# FluentEdge Evidence Index
 
-This folder stores the evidence package for the FluentEdge Sprint 2 submission.
+This folder stores the FluentEdge Sprint 2 baseline and Sprint 4 validation evidence.
 
 ## Evidence Mapping
 
@@ -16,6 +16,7 @@ This folder stores the evidence package for the FluentEdge Sprint 2 submission.
 | E-08 UI/API | Learner UI, OpenAPI, request/response evidence | `E-08-ui-api/` |
 | E-09 Governance | GitHub Project, repository, and governance audit evidence | `E-09-github-governance/project-board-sprint2.png`, `E-09-github-governance/repository-overview.png`, `E-09-github-governance/project-fields.png`, and `E-09-github-governance/github-audit.md` |
 | E-10 Final review | Final evidence traceability review | `E-10-final-review/traceability-review.png` and `E-10-final-review/SPRINT2_FINAL_SUBMISSION.md` |
+| E-11 Sprint 4 validation | Split correction, performance, concurrency, failure injection, rollback, startup, tests, coverage, dependency audit, and SHA-256 inventory | `E-11-sprint4-validation/README.md` |
 
 ## Screenshot Notes
 

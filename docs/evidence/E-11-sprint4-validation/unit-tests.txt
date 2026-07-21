@@ -1,0 +1,185 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /usr/local/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /app
+configfile: pyproject.toml
+plugins: cov-7.1.0, asyncio-1.4.0, anyio-4.14.2
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 48 items / 1 deselected / 47 selected
+
+tests/unit/test_audio.py::test_normalize_to_16k_mono PASSED              [  2%]
+tests/unit/test_audio.py::test_reject_oversized_payload PASSED           [  4%]
+tests/unit/test_audio.py::test_valid_wav_roundtrip PASSED                [  6%]
+tests/unit/test_audio.py::test_reject_unsupported_extension PASSED       [  8%]
+tests/unit/test_features.py::test_feature_schema_complete PASSED         [ 10%]
+tests/unit/test_health.py::test_health_returns_schema PASSED             [ 12%]
+tests/unit/test_health.py::test_metrics_endpoint PASSED                  [ 14%]
+tests/unit/test_health.py::test_request_id_header PASSED                 [ 17%]
+tests/unit/test_log_redaction.py::test_redacting_filter_blocks_sensitive_markers PASSED [ 19%]
+tests/unit/test_log_redaction.py::test_redacting_filter_allows_safe_messages PASSED [ 21%]
+tests/unit/test_path_traversal.py::test_storage_rejects_traversal PASSED [ 23%]
+tests/unit/test_pipeline.py::test_quality_gate_threshold PASSED          [ 25%]
+tests/unit/test_pipeline.py::test_train_and_evaluate_candidates PASSED   [ 27%]
+tests/unit/test_pipeline.py::test_model_card_and_checksum_roundtrip PASSED [ 29%]
+tests/unit/test_predict.py::test_predict_success PASSED                  [ 31%]
+tests/unit/test_predict.py::test_predict_missing_prompt PASSED           [ 34%]
+tests/unit/test_predict.py::test_predict_unsupported_media PASSED        [ 36%]
+tests/unit/test_predict.py::test_predict_oversized_file PASSED           [ 38%]
+tests/unit/test_predict.py::test_predict_decode_failure PASSED           [ 40%]
+tests/unit/test_predict.py::test_predict_model_not_ready PASSED          [ 42%]
+tests/unit/test_predict.py::test_predict_storage_failure_returns_controlled_503 PASSED [ 44%]
+tests/unit/test_predict.py::test_predict_model_load_failure_returns_controlled_503 PASSED [ 46%]
+tests/unit/test_predict.py::test_ready_when_model_configured PASSED      [ 48%]
+tests/unit/test_predict.py::test_health_contract PASSED                  [ 51%]
+tests/unit/test_predict.py::test_ui_served PASSED                        [ 53%]
+tests/unit/test_predict.py::test_performance_smoke PASSED                [ 55%]
+tests/unit/test_retention.py::test_verify_retention_script_logic PASSED  [ 57%]
+tests/unit/test_split.py::test_assign_splits_reproducible PASSED         [ 59%]
+tests/unit/test_split.py::test_no_speaker_overlap_between_splits PASSED  [ 61%]
+tests/unit/test_split.py::test_six_speakers_produce_nonempty_partitions PASSED [ 63%]
+tests/unit/test_split.py::test_rejects_too_few_speakers_for_requested_partitions PASSED [ 65%]
+tests/unit/test_split.py::test_manifest_hash_stable PASSED               [ 68%]
+tests/unit/test_storage.py::TestStorageAdapter::test_generate_key_ignores_client_filename PASSED [ 70%]
+tests/unit/test_storage.py::TestStorageAdapter::test_generate_key_unique PASSED [ 72%]
+tests/unit/test_storage.py::TestFilesystemStorage::test_put_get_roundtrip PASSED [ 74%]
+tests/unit/test_storage.py::TestFilesystemStorage::test_rejects_path_traversal_on_get PASSED [ 76%]
+tests/unit/test_storage.py::TestFilesystemStorage::test_bucket_exists PASSED [ 78%]
+tests/unit/test_storage.py::TestFilesystemStorage::test_cleanup_expired PASSED [ 80%]
+tests/unit/test_storage.py::TestFilesystemStorage::test_list_objects PASSED [ 82%]
+tests/unit/test_storage.py::TestS3Storage::test_put_get_delete SKIPPED   [ 85%]
+tests/unit/test_storage.py::TestS3Storage::test_bucket_exists SKIPPED    [ 87%]
+tests/unit/test_text.py::test_normalize_lowercase_and_whitespace PASSED  [ 89%]
+tests/unit/test_text.py::test_normalize_punctuation PASSED               [ 91%]
+tests/unit/test_validate.py::test_validate_synthetic_manifest PASSED     [ 93%]
+tests/unit/test_validate.py::test_detect_duplicate_clip_id PASSED        [ 95%]
+tests/unit/test_validate.py::test_detect_missing_transcript PASSED       [ 97%]
+tests/unit/test_validate.py::test_corrupt_audio_rejected PASSED          [100%]
+
+=============================== warnings summary ===============================
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:64
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:64: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("togetherai_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:78
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:78: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("cohere_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:86
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:86: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("ai21labs_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:95
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:95: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("mosaicml_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:125
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:125: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("openai_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:182
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:182: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("anthropic_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:190
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:190: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("palm_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:230
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:230: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("mistral_api_key", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:284
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:284: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("provider", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:311
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:311: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("config", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:351
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:351: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("name")
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:361
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:361: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("model", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:372
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:372: PydanticDeprecatedSince20: Pydantic V1 style `@root_validator` validators are deprecated. You should migrate to Pydantic V2 style `@model_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @root_validator(skip_on_failure=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:394
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:394: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("route_type", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:400
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:400: PydanticDeprecatedSince20: Pydantic V1 style `@validator` validators are deprecated. You should migrate to Pydantic V2 style `@field_validator` validators, see the migration guide for more details. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @validator("limit", pre=True)
+
+../usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:450
+  /usr/local/lib/python3.11/site-packages/mlflow/gateway/config.py:450: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    class Route(ConfigModel):
+
+../usr/local/lib/python3.11/site-packages/fastapi/testclient.py:1
+  /usr/local/lib/python3.11/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/unit/test_audio.py::test_valid_wav_roundtrip
+  /usr/local/lib/python3.11/site-packages/audioread/rawread.py:16: DeprecationWarning: 'aifc' is deprecated and slated for removal in Python 3.13
+    import aifc
+
+tests/unit/test_audio.py::test_valid_wav_roundtrip
+  /usr/local/lib/python3.11/site-packages/audioread/rawread.py:17: DeprecationWarning: 'audioop' is deprecated and slated for removal in Python 3.13
+    import audioop
+
+tests/unit/test_audio.py::test_valid_wav_roundtrip
+  /usr/local/lib/python3.11/site-packages/audioread/rawread.py:19: DeprecationWarning: 'sunau' is deprecated and slated for removal in Python 3.13
+    import sunau
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+--- generated xml file: /app/docs/evidence/E-11-sprint4-validation/junit.xml ---
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.11.15-final-0 _______________
+
+Name                                  Stmts   Miss  Cover   Missing
+-------------------------------------------------------------------
+api/app/__init__.py                       0      0   100%
+api/app/config.py                        25      0   100%
+api/app/exceptions.py                    16      0   100%
+api/app/main.py                          53      3    94%   74-75, 90
+api/app/metrics.py                        9      0   100%
+api/app/routers/__init__.py               0      0   100%
+api/app/routers/health.py                24      1    96%   38
+api/app/routers/predict.py               30      0   100%
+api/app/routers/ready.py                 23      1    96%   32
+api/app/schemas.py                       33      0   100%
+api/app/services/__init__.py              0      0   100%
+api/app/services/health.py               45     10    78%   38-40, 51-52, 57-58, 62-63, 75
+api/app/services/inference.py            71      7    90%   45, 51, 115-117, 126-127
+api/app/services/model_loader.py         87     50    43%   39, 43, 47-82, 86-94, 97-98, 101-106, 114-116
+api/app/services/storage.py             126     27    79%   92-98, 101-102, 105, 108-119, 124, 126, 135-142, 203
+ml/__init__.py                            0      0   100%
+ml/data/__init__.py                       0      0   100%
+ml/data/preprocess.py                    32      9    72%   33-40, 58
+ml/data/schema.py                        34      0   100%
+ml/data/split.py                         48      3    94%   27, 51-55
+ml/data/validate.py                      63      8    87%   32, 65-68, 72-75, 89-90, 99
+ml/evaluation/__init__.py                 0      0   100%
+ml/evaluation/evaluate.py                26      3    88%   52-53, 70
+ml/evaluation/metrics.py                 25      0   100%
+ml/evaluation/model_card.py               8      4    50%   20-23
+ml/features/__init__.py                   0      0   100%
+ml/features/audio.py                     40      2    95%   35, 47
+ml/features/build.py                     46      2    96%   30, 32
+ml/features/text.py                      13      1    92%   15
+ml/models/__init__.py                     0      0   100%
+ml/models/predict.py                     37      3    92%   56, 58, 60
+ml/models/registry.py                    47     31    34%   21-22, 37-65, 70-79, 83-92
+ml/models/train.py                       27      1    96%   71
+ml/pipeline/__init__.py                   0      0   100%
+ml/pipeline/local_pipeline.py            91     66    27%   31-41, 52-150, 162-179, 183
+ml/pipeline/sagemaker_compatible.py       7      7     0%   7-49
+-------------------------------------------------------------------
+TOTAL                                  1086    239    78%
+Coverage XML written to file docs/evidence/E-11-sprint4-validation/coverage.xml
+===== 45 passed, 2 skipped, 1 deselected, 20 warnings in 61.40s (0:01:01) ======

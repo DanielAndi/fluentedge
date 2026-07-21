@@ -1,6 +1,6 @@
 # GitHub Project Setup
 
-This document records the FluentEdge GitHub Issues and GitHub Projects setup that replaces Jira for Sprint 2 governance.
+This document records the FluentEdge GitHub Issues and GitHub Projects setup that replaces Jira for project governance. Sprint 2 bootstrap behavior remains below; the current Sprint 4 source record is `sprint4-closeout.md`.
 
 ## Safety Rules
 
@@ -10,6 +10,7 @@ This document records the FluentEdge GitHub Issues and GitHub Projects setup tha
 - Do not make the repository public without explicit approval.
 - Do not enable paid features.
 - Run the bootstrap script in dry-run mode before applying changes.
+- Do not claim a remote Sprint 4 update when `gh auth status` fails.
 
 ## Configuration
 
@@ -38,6 +39,12 @@ It can create or configure:
 - Project custom fields for Priority, Sprint, Workstream, Requirement IDs, Target Date, Evidence, and Risk.
 - Sprint 2 issues from Appendix B.
 - Initial project field values after resolving Project, field, option, and item IDs from `gh` command output.
+
+## Sprint 4 Update
+
+The Sprint 4 closeout provides the issue-ready scope, acceptance criteria, status, requirement IDs, evidence paths, completion notes, challenges, responsibilities, and deadlines. The July 20 attempt could not update GitHub because the active `DanielAndi` CLI token was invalid.
+
+After authentication is repaired, use `sprint4-closeout.md` to create or update the Sprint 4 issues, attach each item to Project #4, and set Status, Priority, Sprint, Workstream, Requirement IDs, Target Date, Evidence, and Risk. Do not close the public-data, dependency, video, screenshot, or waiver items without the missing evidence.
 
 ## Manual Web Checklist
 
