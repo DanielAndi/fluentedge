@@ -13,7 +13,7 @@
 **Document Version:** 4.0<br>
 **Document Status:** Final Sprint 4 submission document<br>
 **Repository:** [DanielAndi/fluentedge](https://github.com/DanielAndi/fluentedge)<br>
-**Repository Baseline (Git SHA-1):** `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a`
+**Sprint 4 Implementation Commit (Git SHA-1):** `5c191a638110e28ceff15e259766bc1c04dc9d99`
 
 :::
 
@@ -117,7 +117,7 @@ The Sprint 4 objective is not to claim production-grade pronunciation assessment
 | RC-08 | Governance | Evidence documents conflict with open issue states and unchecked acceptance boxes. | Issue status, completion notes, and evidence fields must be reconciled before final acceptance. |
 | RC-09 | Cryptographic hashes | Git object IDs use SHA-1; dataset, model, report, and evidence checksums use SHA-256. | Every reproducibility record names the algorithm, digest length, and authoritative value. |
 | RC-10 | Latency target | The authoritative local target is warm `/predict` p95 at or below 2.0 seconds across at least 30 requests. | The earlier 800 ms AWS target is retained only as an aspirational future optimization. |
-| RC-11 | Repository freshness | Repository `main` was at `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a` before the Sprint 4 hardening work. | The scoped Sprint 4 commit must be pushed after GitHub authentication is repaired; the report does not claim a remote commit that is not visible. |
+| RC-11 | Repository freshness | Repository `main` was at `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a` before the Sprint 4 hardening work. | Sprint 4 implementation commit `5c191a638110e28ceff15e259766bc1c04dc9d99` and documentation fix `e68e8f0d766701f76747b221ebd70f2ffeb2ab62` are pushed and visible. |
 | RC-12 | Evidence freshness | Executable and local-service screenshot evidence was refreshed on July 20, 2026 local time. | E-11 stores validation/test evidence; E-06 through E-08 contain fresh MLflow, Grafana, Prometheus, and learner-UI captures. |
 
 ## 2.2 Reproducibility Requirement Clarification
@@ -135,7 +135,7 @@ The Sprint 4 objective is not to claim production-grade pronunciation assessment
 
 ```yaml
 git_object_format: sha1
-git_commit_sha1: 4e46d3d3047ad0ebaa05caec05de343d12ce3d8a
+git_commit_sha1: 5c191a638110e28ceff15e259766bc1c04dc9d99
 dataset_manifest_sha256: 81b47ea142995e7cf6361c8f7e2b0272c78ba66ee94dc8f8393fd56a3b33408e
 model_artifact_sha256: c7016b8858bf0efa35c6f364cb2dc1307734d71c33975d299f8e8a0e5ae05e82
 random_seed: 42
@@ -204,7 +204,7 @@ graph LR
 ## 3.2 Infrastructure Setup
 
 1. Clone [DanielAndi/fluentedge](https://github.com/DanielAndi/fluentedge).
-2. Check out and verify full SHA-1 commit ID `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a`.
+2. Check out and verify full Sprint 4 implementation SHA-1 commit ID `5c191a638110e28ceff15e259766bc1c04dc9d99`.
 3. Run `git rev-parse --show-object-format`; the expected result for this baseline is `sha1`.
 4. Copy `.env.example` to `.env`, retain placeholder local credentials only, and never commit `.env`.
 5. Use Python 3.11 or the documented Docker commands because the project requires Python `>=3.11,<3.12`.
@@ -221,7 +221,7 @@ graph LR
 ```bash
 git clone https://github.com/DanielAndi/fluentedge.git
 cd fluentedge
-git checkout 4e46d3d3047ad0ebaa05caec05de343d12ce3d8a
+git checkout 5c191a638110e28ceff15e259766bc1c04dc9d99
 git rev-parse --show-object-format
 git rev-parse HEAD
 ```
@@ -230,7 +230,7 @@ Expected authoritative values:
 
 ```text
 sha1
-4e46d3d3047ad0ebaa05caec05de343d12ce3d8a
+5c191a638110e28ceff15e259766bc1c04dc9d99
 ```
 
 ## 3.3 Component Work Packages
@@ -244,7 +244,7 @@ sha1
 | WP-5 | Inference API | Validate request, generate request ID, store temporarily, load approved model, predict, delete upload, return typed response | FastAPI routes and OpenAPI contract | Functional |
 | WP-6 | Learner interface | Provide upload/record controls and plain-language output | Static UI and screenshot | Functional baseline |
 | WP-7 | Observability | Export request, error, latency, label, confidence, version, and dependency metrics | Prometheus configuration and Grafana dashboard | Functional baseline |
-| WP-8 | CI and governance | Run format, lint, tests, secret scan, dependency scan, Compose validation, container smoke, and docs checks | Actions runs, issues, evidence index | Local format/lint/tests pass; audit has 32 findings; authenticated GitHub refresh blocked |
+| WP-8 | CI and governance | Run format, lint, tests, secret scan, dependency scan, Compose validation, container smoke, and docs checks | Actions runs, issues, evidence index | CI, Container, and Docs green; audit has 32 findings; Project refresh blocked |
 | WP-9 | Validation hardening | Add licensed public data, valid partitioning, load/concurrency, failure, rollback, startup repetition, and dependency remediation | New reports and issue closure evidence | Split, load, concurrency, failure, rollback, and startup complete; real data and dependencies open |
 | WP-10 | Sprint 4 submission | Consolidate current status, requirements, risk, test plan, evidence, and video walkthrough | Markdown/PDF report and hosted video plan | Markdown/PDF and local evidence complete; hosted video remains owner action |
 
@@ -381,7 +381,7 @@ Appendix B reproduces the eight risks from the Sprint 1 proposal's page 13 risk 
 | Services | FastAPI `:8000`, MLflow `:5000`, LocalStack S3 `:4566`, Prometheus `:9090`, Grafana `:3000` |
 | Test automation | pytest, pytest-asyncio, Ruff, pip-audit, Gitleaks, GitHub Actions, Compose validation, and container smoke tests |
 | Model stack | NumPy, pandas, scikit-learn, librosa, soundfile, jiwer, joblib, and MLflow 2.18.0 baseline |
-| Git identity | Full SHA-1 commit ID `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a` |
+| Git identity | Implementation SHA-1 `5c191a638110e28ceff15e259766bc1c04dc9d99`; green follow-up `e68e8f0d766701f76747b221ebd70f2ffeb2ab62` |
 | Artifact integrity | SHA-256 digest for manifest, features, model, model card, evaluation report, and evidence inventory |
 | Evidence baseline | Executable reports refreshed July 20, 2026; authenticated service/browser screenshots remain from July 6-8 |
 
@@ -428,11 +428,11 @@ Appendix B reproduces the eight risks from the Sprint 1 proposal's page 13 risk 
 | T-25 | Rollback | Reject bad candidate then restore approved artifact | Previous SHA-256-verified model is restored and loadable | Automated/integration | Pass; approved SHA-256 restored exactly |
 | T-26 | Startup | Two clean start/bootstrap/health cycles | API, storage, model, and dependency health pass twice | System | Pass; two fresh startup logs stored |
 | T-27 | Observability | Generate prediction activity | Dashboard shows traffic, latency, dependency health, and prediction label | Manual/system | Pass; Grafana, Prometheus, MLflow, and learner UI recaptured |
-| T-28 | CI | Push or pull request | Format, lint, unit, Compose, container, docs, and secret checks pass | Automated | Local Python 3.11: format/lint pass; 45 pass, 2 skip |
+| T-28 | CI | Push or pull request | Format, lint, unit, Compose, container, docs, and secret checks pass | Automated | Pass; CI, Container, and Docs workflows green at `e68e8f0` |
 | T-29 | Dependencies | Locked dependency audit | No unresolved Critical/High finding or signed risk acceptance | Automated/review | Fail; 32 findings in MLflow 2.18.0 and pyarrow 18.1.0 |
 | T-30 | Governance | Trace requirement to issue, full commit ID, test, and evidence | Links resolve and issue completion state matches evidence | Manual/review | Reconciliation required |
 | T-31 | Usability | Learner completes one attempt | Plain-language result, non-clinical wording, understandable error recovery | Manual | Baseline UI reviewed |
-| T-32 | Freshness | Rerun submission evidence | Current timestamped test, health, predict, and dashboard evidence matches the demo | Manual/system | Local evidence refreshed; GitHub screenshots and video open |
+| T-32 | Freshness | Rerun submission evidence | Current timestamped test, health, predict, and dashboard evidence matches the demo | Manual/system | Local and GitHub Actions evidence refreshed; Project screenshot and video open |
 
 ## 5.5 Current Evidence Summary
 
@@ -476,7 +476,7 @@ Appendix B reproduces the eight risks from the Sprint 1 proposal's page 13 risk 
 - Defects receive severity, affected requirement IDs, reproduction steps, expected/actual behavior, evidence, and retest result.
 - **Freshness:** Any result shown in the video must be reproducible from the same repository baseline cited in the document.
 
-> **Current validation decision:** The repository demonstrates a functional prototype and now passes the local partition, API performance, health performance, concurrency, controlled-failure, startup, rollback, unit-test, lint, artifact-integrity, and local observability-evidence gates. Final PoC acceptance is still blocked by licensed real-data validity, dependency remediation or signed risk acceptance, authenticated GitHub governance/Actions evidence, and the hosted demonstration video.
+> **Current validation decision:** The repository demonstrates a functional prototype and now passes the local partition, API performance, health performance, concurrency, controlled-failure, startup, rollback, unit-test, lint, artifact-integrity, local observability, and GitHub Actions gates. Final PoC acceptance is still blocked by licensed real-data validity, dependency remediation or signed risk acceptance, authenticated GitHub Project reconciliation, and the hosted demonstration video.
 
 <div class="page-break"></div>
 
@@ -518,7 +518,7 @@ Sprint 4 converts the existing functional prototype and Sprint 3 report into a c
 | Slow end-to-end prediction | Replaced the single cold historical sample with 30 warm end-to-end measurements; p95 is 84.749 ms. |
 | Open issue states | The report explicitly records the mismatch between evidence documents and unchecked/open GitHub issues. |
 | Jira/Confluence wording | GitHub Issues and Project #4 are documented as the replacement; no unverified Jira or Confluence update is claimed. |
-| Stale execution evidence | Refreshed executable, learner-UI, MLflow, Grafana, and Prometheus evidence; authenticated GitHub Actions/Project evidence remains open. |
+| Stale execution evidence | Refreshed executable, learner-UI, MLflow, Grafana, Prometheus, and GitHub Actions evidence; authenticated Project evidence remains open. |
 | Vulnerable dependencies | Recorded all 32 fresh findings without silently accepting them; upgrade testing or signed risk acceptance remains blocking. |
 
 ## 6.4 Responsibilities Assigned
@@ -547,7 +547,7 @@ Sprint 4 converts the existing functional prototype and Sprint 3 report into a c
 | Date / window | Deadline | Expected output |
 |---|---|---|
 | July 20, 2026 | Submit Sprint 4 PDF and hosted video URL | Current submission package |
-| Before recording | Capture current GitHub Actions/Project screens; record and upload the walkthrough | Owner-authenticated evidence checkpoint |
+| Before recording | Capture the current GitHub Project screen; record and upload the walkthrough | Owner-authenticated evidence checkpoint |
 | Next implementation session | Acquire and document a licensed public validation subset; test a supported MLflow/pyarrow upgrade | Highest-priority technical work |
 | Before final release | Resolve or sign acceptance for dependency findings and reconcile GitHub Project issue fields | Remaining blocking acceptance work |
 | August 9, 2026 | Final reproducible release and presentation | Planned final milestone |
@@ -556,7 +556,7 @@ Sprint 4 converts the existing functional prototype and Sprint 3 report into a c
 
 > **Ready for document submission:** The report follows the required section structure, begins each major section on a new page, includes detailed implementation and validation plans, preserves the required Sprint 2 and Sprint 1 appendices, identifies the sole CLC member, and supports a separate hosted video demonstration.
 
-> **Not yet final PoC acceptance:** Local hardening and service screenshot gates pass, but the document intentionally does not claim real-data validation, dependency acceptance, authenticated GitHub reconciliation/Actions evidence, Confluence approval, or a hosted video. The video should demonstrate current progress and limitations rather than claim production readiness.
+> **Not yet final PoC acceptance:** Local hardening, service screenshots, and GitHub Actions pass, but the document intentionally does not claim real-data validation, dependency acceptance, authenticated GitHub Project reconciliation, Confluence approval, or a hosted video. The video should demonstrate current progress and limitations rather than claim production readiness.
 
 <div class="page-break"></div>
 
@@ -734,7 +734,8 @@ National Institute of Standards and Technology. (2015). *Secure Hash Standard (S
 
 | Evidence area | Artifact / result | Demonstration use |
 |---|---|---|
-| Repository baseline | `main` at `4e46d3d3047ad0ebaa05caec05de343d12ce3d8a` | Run `git rev-parse HEAD` at the start of the video. |
+| Repository baseline | Sprint 4 implementation `5c191a638110e28ceff15e259766bc1c04dc9d99`; green Docs fix `e68e8f0d766701f76747b221ebd70f2ffeb2ab62` | Run `git rev-parse HEAD` at the start of the video. |
+| GitHub Actions | CI, Container, and Docs runs completed successfully | Show `actions-ci-sprint4.png` and the linked workflow runs. |
 | Quick-start documentation | `README.md`: `cp .env.example .env`; `make setup`; `make up`; `make bootstrap`; `make health` | Show the README and terminal health output. |
 | API application | `api/app/main.py` | Show request-ID middleware, metrics endpoint, and router registration. |
 | Prediction route | `api/app/routers/predict.py` | Show form/file input, metadata-only logging, metrics, and response fields. |

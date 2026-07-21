@@ -27,6 +27,7 @@ def inventory_paths() -> list[Path]:
         ROOT / "docs/evidence/E-06-training-evaluation/mlflow-screenshot.png",
         ROOT / "docs/evidence/E-07-deployment-monitoring/grafana-dashboard.png",
         ROOT / "docs/evidence/E-07-deployment-monitoring/prometheus-targets.png",
+        ROOT / "docs/evidence/E-07-deployment-monitoring/actions-ci-sprint4.png",
         ROOT / "docs/evidence/E-08-ui-api/ui-screenshot.png",
         ROOT / "pyproject.toml",
         ROOT / "requirements-dev.lock",
